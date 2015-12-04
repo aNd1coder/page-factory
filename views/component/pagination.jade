@@ -1,0 +1,14 @@
+ul.pagination
+    if(model.prev || model.next)
+        if(model.prev)
+            li
+                a(href="#{model.prev}") 上一页
+        else
+            li.disabled
+                span 上一页
+        if(model.next)
+            li
+                a(href="#{model.next}") 下一页
+        else
+            li.disabled
+                span 下一页

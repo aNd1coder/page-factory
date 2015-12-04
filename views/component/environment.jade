@@ -1,0 +1,2 @@
+each name,env in ENVIRONMENT
+    option(value=env,selected=model ? model.environment == env : false)= name

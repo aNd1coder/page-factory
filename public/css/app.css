@@ -1,0 +1,144 @@
+body {
+    font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background-color: #fff;
+}
+
+.navbar-static-top {
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+}
+
+.navbar-nav > li {
+    border-left: 1px solid #f5f5f5;
+}
+
+.navbar-nav > li > a {
+    font-size: 16px;
+}
+
+.navbar-right > li > a {
+    font-size: 14px;
+}
+
+.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    padding: 10px;
+}
+
+.nav > li > a:hover,
+.page-page .nav-page a,
+.page-template .nav-template a,
+.page-module .nav-module a {
+    background-color: #337ab7;
+    color: #fff;
+}
+
+.page-page .nav-page,
+.page-template .nav-template,
+.page-module .nav-module {
+    border-left-color: #ddd;
+}
+
+.navbar-brand {
+    background-color: #337ab7;
+    color: #fff;
+}
+
+.navbar-brand:hover {
+    color: #fff;
+}
+
+.table a {
+    margin-right: 5px;
+}
+
+.table caption {
+    padding: 0 0 0 5px;
+    margin-bottom: 10px;
+    border-left: 5px solid #333;
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+}
+
+.table caption a {
+    padding: .2em .5em;
+    vertical-align: 1px;
+}
+
+.table td .label {
+    margin-right: 5px;
+    padding: .2em .4em;
+}
+
+.table code {
+    cursor: pointer;
+}
+
+.table code.hover {
+    color: #f9f2f4;
+    background-color: #c7254e;
+}
+
+.well {
+    padding: 10px;
+    box-shadow: none;
+}
+
+.label {
+    padding: .3em .5em .2em;
+}
+
+.btn, .label, .form-control {
+    font-size: 12px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+input[type=checkbox], input[type=radio] {
+    margin-top: 1px;
+}
+
+.checkbox input[type=checkbox], .checkbox-inline input[type=checkbox], .radio input[type=radio], .radio-inline input[type=radio] {
+    margin-left: -15px;
+}
+
+input[type=checkbox] {
+    margin-left: 10px;
+}
+
+.form .btn {
+    margin-right: 20px;
+}
+
+.pagination {
+    float: right;
+    margin-top: 0;
+}
+
+.form-inline .form-group {
+    margin-right: 10px;
+}
+
+.form-group .radio-inline {
+    margin-left: 10px;
+    vertical-align: top;
+}
+
+.form .label {
+    margin-left: 10px;
+    padding: .2em .3em;
+}
+
+.form-inline .control-label {
+    margin-right: 5px;
+}
+
+.form-action .btn {
+    font-size: 14px;
+}
+
+.tooltip-inner {
+    max-width: 100%;
+}

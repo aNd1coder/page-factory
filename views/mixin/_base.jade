@@ -1,0 +1,125 @@
+mixin table()
+    form.form.form-inline.well(method="get",action="/#{page}/")
+        .form-group
+            label.control-label 项目
+            select.form-control(name="project")
+                option(value="") 全部
+                if(page == 'module')
+                    option(value="global") 全局
+                include ../component/project
+        if(page == 'module')
+            .form-group
+                label.control-label 类型
+                select.form-control(name="filetype")
+                    option(value="") 全部
+                    include ../component/filetype
+        .form-group
+            label.control-label 环境
+            select.form-control(name="environment")
+                option(value="") 全部
+                include ../component/environment
+        .form-group
+            label.control-label 作者
+            input.form-control(name="author",value=model.author || '')
+        .form-group
+            label.control-label 标题
+            input.form-control(name="title",value= model.title || '')
+        input.btn.btn-primary(type="submit",value="搜索")
+        a.btn.btn-default(href="/#{page}/") 重置
+    table.table.table-striped.table-hover
+        caption
+            | #{pages[page]}列表
+            a.label.label-primary(href="/#{page}/new") 新增
+        thead
+            tr
+                th 标题
+                th= page == 'module' ? '项目类型' : '项目'
+                th 作者
+                th 创建时间
+                th 最后更新
+                th 环境状态
+                th 操作
+        tbody
+        if model.length > 0
+        each m in model.data
+            tr
+                td
+                    a(href="http://#{m.project}.hai360.com/ssi/#{m.path}",target="_blank")= m.title
+                    if(page == 'module')
+                        code.btn-copy(href="javascript:;",title=m.path,rel="tooltip",data-placement="right") 复制代码
+                td
+                    if(page == 'module')
+                        a(href="/#{page}/?project=#{m.project}&filetype=#{m.filetype}")= (PROJECT[m.project] || '全局') + FILETYPE[m.filetype]
+                    else
+                        a(href="/#{page}/?project=#{m.project}")= PROJECT[m.project]
+                td
+                    a(href="/#{page}/?author=#{m.author}")= m.author
+                td= moment(new Date(m.createdAt)).format('YYYY-MM-DD HH:MM:SS')
+                td= moment(new Date(m.updatedAt)).format('YYYY-MM-DD HH:MM:SS')
+                td
+                    if ENVIRONMENT[m.environment]
+                        if m.environment == 'dev'
+                            span.label.label-default= ENVIRONMENT[m.environment]
+                        else if m.environment == 'test'
+                            span.label.label-info= ENVIRONMENT[m.environment]
+                        else if m.environment == 'pre'
+                            span.label.label-primary= ENVIRONMENT[m.environment]
+                        else
+                            span.label.label-success= ENVIRONMENT[m.environment]
+
+                    if m.published == 1
+                        span.label.label-success 已发布
+                    else
+                        span.label.label-danger 草稿
+                td
+                    a.btn.btn-default.btn-delete(href="/#{page}/delete/#{m._id}") 删除
+                    a.btn.btn-default(href="/#{page}/edit/#{m._id}") 编辑
+    include ../component/pagination
+
+mixin form()
+    form.form.well(method="post",action="/#{page}/save")
+        .form-group
+            label.control-label 项目
+            select.form-control(name="project")
+                if(page == 'module')
+                    option(value="global") 全局
+                include ../component/project
+        if(page == 'module')
+            .form-group
+                label.control-label 类型
+                select.form-control(name="filetype")
+                    include ../component/filetype
+        .form-group
+            label.control-label 标题
+            input.form-control(type="text",name="title",value=model ? model.title : '')
+        .form-group
+            label.control-label 文件名
+            input.form-control(type="text",name="filename",value=model ? model.filename : '')
+        .form-group
+            label.control-label 内容
+            textarea.form-control(type="text",name="content",rows="15")= model ? model.content : ''
+        .form-group
+            label.control-label 环境
+            each name,env in ENVIRONMENT
+                label.radio-inline
+                    input(type="radio",name="environment",value=env,checked=model ? model.environment == env : false)
+                    = name
+        .form-group
+            label.control-label 是否发布
+                input(type="checkbox",name="published",value="1",checked=model ? model.published == 1 : false)
+                span.label.label-danger 勾选则会覆盖现有文件
+        .form-group.form-action
+            if(model)
+                input(type="hidden",name="_id",value=model._id)
+                input(type="hidden",name="createdAt",value=model.createdAt)
+            input.btn.btn-primary(type="submit",value="保 存")
+            a.btn.btn-default(href="/#{page}/") 返回
+        if(page == 'module')
+            script#tpl-module(type="text/html").
+                hello,<%= data.name %>
+            script.
+                var data = {name: 'samgui'}, tpl = $('#tpl-module').html(), html;
+                html = App.compile(tpl,data);
+                console.log(html);
+
+

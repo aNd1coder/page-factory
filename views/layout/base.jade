@@ -1,0 +1,37 @@
+- pages = {page:'页面',template:'模版',module:'模块'}
+doctype html
+html(class= 'page-' + page)
+    head
+        meta(charset="utf-8")
+        meta(name="viewport",content="width=device-width,initial-scale=1")
+        meta(name="author",content="samgui")
+        title= title
+        link(rel="stylesheet",href="/vendor/bootstrap/css/bootstrap.min.css")
+        link(rel="stylesheet",href="/vendor/dialog/ui-dialog.css")
+        link(rel='stylesheet',href='/css/app.css')
+        script(src="/vendor/jquery/jquery-1.11.3.min.js")
+        script(src="/vendor/bootstrap/js/bootstrap.min.js")
+        script(src="/vendor/dialog/dialog-plus-min.js")
+        script(src="/vendor/zeroclipboard/jquery.zeroclipboard.min.js")
+        script(src="/js/app.js")
+    body
+        header.navbar.navbar-static-top
+            .container-fluid
+                .navbar-header
+                    a.navbar-brand(href="/page/") Page Factory
+                .collapse.navbar-collapse
+                    ul.nav.navbar-nav
+                        li.nav-page
+                            a(href="/page/") 页面
+                        li.nav-template
+                            a(href="/template/") 模版
+                        li.nav-module
+                            a(href="/module/") 模块
+                    ul.nav.navbar-nav.navbar-right
+                        li
+                            a(href="javascript:;") samgui
+                        li
+                            a(href="/logout") 退出
+        .container-fluid
+            include ../mixin/_base
+            block content
