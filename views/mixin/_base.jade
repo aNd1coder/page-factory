@@ -77,6 +77,7 @@ mixin table()
     include ../component/pagination
 
 mixin form()
+    - var isHtmlEditor = model && model.filetype && model.filetype == 'html'
     form.form.well(method="post",action="/#{page}/save")
         .form-group
             label.control-label 项目
@@ -91,13 +92,29 @@ mixin form()
                     include ../component/filetype
         .form-group
             label.control-label 标题
-            input.form-control(type="text",name="title",value=model ? model.title : '')
+            input.form-control(type="text",name="title",value=model ? model.title : '',placeholder="")
         .form-group
             label.control-label 文件名
-            input.form-control(type="text",name="filename",value=model ? model.filename : '')
-        .form-group
-            label.control-label 内容
-            textarea.form-control(type="text",name="content",rows="15")= model ? model.content : ''
+            input.form-control(type="text",name="filename",readonly=model ? true : false,value=model ? model.filename : '',placeholder="英文或拼音小写")
+        if(page == 'module')
+            ul.nav.nav-tabs
+                li.active
+                    a(href="#content",data-toggle="tab") 内容
+                li
+                    a(href="#template",data-toggle="tab") 模版
+                li
+                    a(href="#templateData",data-toggle="tab") 数据
+            .tab-content
+                #content(class="tab-pane fade in active form-group#{isHtmlEditor ? ' html-editor' : ''}")
+                    textarea.form-control(type="text",name="content",readonly= isHtmlEditor)= model ? model.content : ''
+                #template.tab-pane.fade.form-group
+                    textarea.form-control(type="text",name="template",readonly= model && model.template != '')= model ? model.template : '' ? model.content : ''
+                #templateData.tab-pane.fade.form-group
+                    textarea.form-control(type="text",name="templateData",readonly= model && model.templateData != '')= model && model.templateData ? JSON.stringify(model.templateData) : ''
+        else
+            .form-group
+                label.control-label 内容
+                textarea.form-control(type="text",name="content")= model ? model.content : ''
         .form-group
             label.control-label 环境
             each name,env in ENVIRONMENT
@@ -114,12 +131,33 @@ mixin form()
                 input(type="hidden",name="createdAt",value=model.createdAt)
             input.btn.btn-primary(type="submit",value="保 存")
             a.btn.btn-default(href="/#{page}/") 返回
-        if(page == 'module')
-            script#tpl-module(type="text/html").
-                hello,<%= data.name %>
-            script.
-                var data = {name: 'samgui'}, tpl = $('#tpl-module').html(), html;
-                html = App.compile(tpl,data);
-                console.log(html);
-
-
+    if(page == 'module')
+        .modal.modal-module.fade
+            .modal-dialog
+                .modal-content
+                    .modal-header
+                        button.close(data-dismiss="modal")
+                            span &times;
+                        .modal-title 编辑模块内容
+                    .modal-body
+                        if(model && model.templateData)
+                            form(class="form#{model.templateData.rows ? ' form-inline' : ''} well form-module")
+                                if(model.templateData.rows)
+                                    each row in model.templateData.rows
+                                        .form-group
+                                            each field,index in model.templateData.fields
+                                                .input-group
+                                                    .input-group-addon= field[1]
+                                                    input.form-control(type="text",name=field[0],value=row[index],data-rule=field[2])
+                                            .input-group
+                                                button.btn.btn-primary.btn-new 新增
+                                                button.btn.btn-default.btn-delete 删除
+                                else
+                                    each field, index in model.templateData.fields
+                                        .form-group
+                                            .input-group
+                                                .input-group-addon= field[1]
+                                                input.form-control(type="text",name=field[0],value=field[3] || '',data-rule=field[2])
+                    .modal-footer
+                        button.btn.btn-default(data-dismiss="modal") 关闭
+                        button.btn.btn-primary.btn-save(type="submit") 保存

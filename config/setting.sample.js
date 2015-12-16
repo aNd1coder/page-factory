@@ -21,12 +21,12 @@ module.exports = {
             password: "****",
             path: "/path/to/pre/ssi/"
         },
-        idc: {
+        prod: {
             host: '6.6.6.6',
             port: 22,
             username: "xxoo",
             password: "****",
-            path: "/path/to/idc/ssi/"
+            path: "/path/to/prod/ssi/"
         }
     }
 };

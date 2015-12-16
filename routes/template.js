@@ -79,7 +79,7 @@ router.post('/save', function (req, res) {
 
     model.author = 'samgui';//TODO session
     model.path = path;
-    model.environment = model.environment || 'test';
+    model.environment = model.environment || 'dev';
     model.published = published;
     model.updatedAt = Date.now();
 

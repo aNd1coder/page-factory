@@ -10,6 +10,8 @@ var moduleSchema = new Schema({
     filename: String, // 文件名
     author: String, // 作者
     content: String, // 内容
+    template: String, // 模版
+    templateData: Schema.Types.Mixed, // 模版数据
     environment: String, // 环境
     published: Number, //0:草稿,1:已发布
     createdAt: { // 创建时间

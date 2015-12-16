@@ -1,5 +1,4 @@
 var fs = require('fs');
-var qs = require('querystring');
 var Client = require('ssh2').Client;
 var setting = require('../config/setting');
 
@@ -22,7 +21,7 @@ module.exports = {
         server = setting.ssiServer[model.environment];
         dir = server.path + dir;
 
-        // 本地环境
+        // 开发环境
         if (model.environment == 'dev') {
             if (!fs.existsSync(dir)) {
                 fs.mkdirSync(dir);
@@ -40,7 +39,10 @@ module.exports = {
             client = new Client();
             client.on('ready', function () {
                 client.sftp(function (err, sftp) {
-                    if (err) throw err;
+                    if (err) {
+                        console.log(err);
+                    }
+
                     sftp.exists(dir, function (exists) {
                         if (!exists) {
                             sftp.mkdir(dir, function () {

@@ -60,7 +60,7 @@ app.locals.ENVIRONMENT = {
     dev: '开发环境',
     test: '测试环境25',
     pre: '预发布环境153',
-    idc: '正式环境48'
+    prod: '正式环境48'
 };
 
 app.locals.PROJECT = {

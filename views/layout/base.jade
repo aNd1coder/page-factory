@@ -5,20 +5,20 @@ html(class= 'page-' + page)
         meta(charset="utf-8")
         meta(name="viewport",content="width=device-width,initial-scale=1")
         meta(name="author",content="samgui")
-        title= title
+        title= title + ' - 页面工厂'
         link(rel="stylesheet",href="/vendor/bootstrap/css/bootstrap.min.css")
         link(rel="stylesheet",href="/vendor/dialog/ui-dialog.css")
         link(rel='stylesheet',href='/css/app.css')
         script(src="/vendor/jquery/jquery-1.11.3.min.js")
+        script(src="/vendor/jquery/jquery-ui.min.js")
         script(src="/vendor/bootstrap/js/bootstrap.min.js")
         script(src="/vendor/dialog/dialog-plus-min.js")
         script(src="/vendor/zeroclipboard/jquery.zeroclipboard.min.js")
-        script(src="/js/app.js")
     body
         header.navbar.navbar-static-top
             .container-fluid
                 .navbar-header
-                    a.navbar-brand(href="/page/") Page Factory
+                    a.navbar-brand(href="/page/") 页面工厂 - Page Factory
                 .collapse.navbar-collapse
                     ul.nav.navbar-nav
                         li.nav-page
@@ -35,3 +35,4 @@ html(class= 'page-' + page)
         .container-fluid
             include ../mixin/_base
             block content
+        script(src="/js/app.js")

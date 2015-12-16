@@ -66,9 +66,11 @@ router.post('/save', function (req, res) {
         id = model._id, date, query = {author: '^.^'},
         published = model.published == 1 ? 1 : 0, dir, filename, path;
 
+    console.log(model);
+
     delete  model._id;
 
-    if (id) { // 更新
+    if (id) { // update
         query = {_id: id};
         date = new Date(model.createdAt);
         date = moment(date).format('YYYYMM');
@@ -83,7 +85,12 @@ router.post('/save', function (req, res) {
 
     model.author = 'samgui';//TODO session
     model.path = path;
-    model.environment = model.environment || 'test';
+    model.environment = model.environment || 'dev';
+
+    if (model.templateData) {
+        model.templateData = JSON.parse(model.templateData);
+    }
+
     model.published = published;
     model.updatedAt = Date.now();
 
