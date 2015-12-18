@@ -1,4 +1,3 @@
-// db 访问配置
 module.exports = {
     development: {
         mongo: {
@@ -6,7 +5,7 @@ module.exports = {
             username: 'root',
             password: '123456',
             port: '27017',
-            database: {
+            db: {
                 pageFactory: 'page_factory'
             }
         }

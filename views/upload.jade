@@ -1,0 +1,20 @@
+extends layout/base
+
+block content
+    link(rel="stylesheet",href="/vendor/uploadify/uploadify.css")
+    script(src="/vendor/uploadify/jquery.uploadify.min.js")
+    form.form.form-uploader
+        .drop 拖放图片到此区域上传
+        .or 或者
+        input#btn-upload(type="file",multiple)
+    ul.list-group.list-files
+        li.list-group-item.disabled
+            h5.list-group-item-heading 最近上传的图片
+    script(type="text/html")#tpl-file-item.
+        <% for (var i = 0, len = data.length, src ; i < len, src = data[i]; i++) {%>
+        <li class="list-group-item">
+            <a href="<%= src %>"data-toggle="popover" title="图片预览" data-content="<img src=<%= src %>>" target="_blank"><%= src %></a>
+            <a class="btn btn-default btn-copy" href="javascript:;" data-src="<%= src %>">复制图片链接</a>
+            <a class="btn btn-default" href="/hota?src=<%= src %>" target="_blank">生成热点图</a>
+        </li>
+        <% } %>

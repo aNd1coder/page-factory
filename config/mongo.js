@@ -4,7 +4,7 @@ var env = process.env.NODE_ENV || 'development';
 var config = require('./database')[env].mongo;
 var mongoagent = mongoose.createConnection(util.format(
     'mongodb://%s:%s@%s:%s/%s',
-    config.username, config.password, config.host, config.port, config.database.pageFactory
+    config.username, config.password, config.host, config.port, config.db.pageFactory
 ), {
     server: {
         poolSize: 4

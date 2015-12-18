@@ -1,23 +1,58 @@
 var express = require('express');
 var path = require('path');
-var favicon = require('serve-favicon');
+//var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var expressValidator = require('express-validator');
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
 var app = express();
+var mongo = require('./config/database')['development'].mongo;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
+app.use(session({
+    secret: 'page_factory',
+    // 每次请求都刷新cookie过期时间
+    resave: true,
+    // 无论有没有session cookie，每次请求都设置个session cookie ，默认给个标示为 connect.sid
+    saveUninitialized: false,
+    cookie: {
+        secure: false, // https
+        maxAge: 1000 * 60 * 60 * 24 * 30 // 30 days
+    },
+    store: new MongoStore({
+        db: mongo.db.pageFactory,
+        host: mongo.host,
+        username: mongo.username,
+        password: mongo.password
+    })
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(expressValidator());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(function (req, res, next) {
+    var url = req.originalUrl, segments = url.split('?')[0].split('/');
+
+    res.locals.controllerName = segments[1];
+    res.locals.actionName = segments[2] || 'index';
+
+    if (url != "/authorize" && !req.session.user) {
+        return res.redirect("/authorize?next=" + encodeURIComponent(url));
+    } else {
+        res.locals.user = req.session.user;
+    }
+
+    next();
+});
 
 // routes
 require('./routes')(app);

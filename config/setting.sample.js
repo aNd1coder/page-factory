@@ -1,4 +1,12 @@
 module.exports = {
+    api: {
+        authorize: {
+            app: 'app',
+            key: 'key',
+            url: '/path/to/authorize/api'
+        },
+        upload: '/path/to/upload/api'
+    },
     ssiServer: {
         dev: {
             host: '127.0.0.1',

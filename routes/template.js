@@ -3,8 +3,7 @@ var helper = require('../helper');
 var moment = require('moment');
 var express = require('express');
 var router = express.Router();
-var moduleName = __filename.split('/').pop().replace('.js', '');
-var TemplateModel = require('../models/' + moduleName);
+var TemplateModel = require('../models/template');
 
 router.get('/', function (req, res) {
     var model, query = {}, page = parseInt(req.query.page) || 1, limit = 20;
@@ -38,13 +37,13 @@ router.get('/', function (req, res) {
 
                 _.extend(model, req.query);
 
-                res.render(moduleName + '/index', {title: '模版列表', page: moduleName, model: model});
+                res.render('template/index', {title: '模版列表', model: model});
             });
     });
 });
 
 router.get('/new', function (req, res) {
-    res.render(moduleName + '/new', {title: '新增模版', page: moduleName});
+    res.render('template/new', {title: '新增模版'});
 });
 
 router.get('/edit/:id', function (req, res) {
@@ -53,7 +52,7 @@ router.get('/edit/:id', function (req, res) {
             console.log(err);
         }
 
-        res.render(moduleName + '/edit', {title: '编辑模版', page: moduleName, model: model});
+        res.render('template/edit', {title: '编辑模版', model: model});
     });
 });
 
@@ -77,7 +76,7 @@ router.post('/save', function (req, res) {
     filename = model.filename + '.shtml';
     path = dir + filename;
 
-    model.author = 'samgui';//TODO session
+    model.author = req.session.user.username;
     model.path = path;
     model.environment = model.environment || 'dev';
     model.published = published;
@@ -89,10 +88,10 @@ router.post('/save', function (req, res) {
         } else {
             if (published) {
                 helper.sftp(model, dir, filename, function () {
-                    res.redirect('/' + moduleName + '/');
+                    res.redirect('/template/');
                 });
             } else {
-                res.redirect('/' + moduleName + '/');
+                res.redirect('/template/');
             }
         }
     });

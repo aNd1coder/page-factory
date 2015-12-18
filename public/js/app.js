@@ -40,12 +40,25 @@ var App = {
             }
 
             return false;
-        }).find('.btn-copy').on('copy', function (e) {
-            var title = $(this).data('original-title'), code = '<!--#include virtual="/ssi/' + title + '" -->';
+        });
+
+        $(document).on('copy', '.btn-copy', function (e) {
+            var me = $(this), code;
+
+            if (me.parents('.page-upload').length > 0) {
+                code = me.data('src');
+            } else if (me.parents('.page-hota').length > 0) {
+                code = $('#code_wrap').val();
+            } else {
+                code = '<!--#include virtual="/ssi/' + me.attr('title') + '" -->';
+            }
+
             e.clipboardData.clearData();
             e.clipboardData.setData("text/plain", code);
             e.preventDefault();
-        }).on('aftercopy', function () {
+
+            return false;
+        }).on('aftercopy', '.btn-copy', function () {
             var d = dialog({
                 content: '复制成功!'
             }).show();
@@ -75,7 +88,7 @@ var App = {
                     $(this).parents('.form-group').remove();
                 }
             }).on('click', '.btn-save', function () {
-                var templateData = {fileds: []}, template = $('[name="template"]').val(),
+                var templateData = {fields: []}, template = $('[name="template"]').val(),
                     isArray = form.hasClass('form-inline'); // 数组数据
 
                 if (isArray) {
@@ -85,7 +98,7 @@ var App = {
                         var row = [];
 
                         $(this).find('.form-control').each(function () {
-                            var me = $(this), filed = [], name, label, rule, value;
+                            var me = $(this), field = [], name, label, rule, value;
 
                             name = me.attr('name');
                             label = $.trim(me.prev('.input-group-addon').html());
@@ -93,8 +106,8 @@ var App = {
                             value = $.trim(me.val());
 
                             if (index == 0) {
-                                filed.push(name, label, rule);
-                                templateData.fileds.push(filed);
+                                field.push(name, label, rule);
+                                templateData.fields.push(field);
                             }
 
                             row.push(value);
@@ -103,15 +116,15 @@ var App = {
                     });
                 } else {
                     form.find('.form-group .form-control').each(function () {
-                        var me = $(this), filed = [], name, label, rule, value;
+                        var me = $(this), field = [], name, label, rule, value;
 
                         name = me.attr('name');
                         label = $.trim(me.prev('.input-group-addon').html());
                         rule = me.data('rule');
                         value = $.trim(me.val());
 
-                        filed.push(name, label, rule, value);
-                        templateData.fileds.push(filed);
+                        field.push(name, label, rule, value);
+                        templateData.fields.push(field);
                     });
                 }
 
@@ -127,7 +140,85 @@ var App = {
             }).sortable();
         }
 
-        $('[rel="tooltip"]').tooltip();
+        $('.form-authorize').submit(function () {
+            var form = $(this);
+
+            $.ajax({
+                type: form.attr('method'),
+                url: form.attr('action'),
+                data: form.serialize(),
+                dataType: 'json',
+                success: function (result) {
+                    var code = result.code, panel, message = result.message;
+
+                    if (code == 0) {
+                        location.href = '/';
+                    } else {
+                        panel = $('.authorize-message').empty();
+
+                        if (message.length > 0) {
+                            if (typeof message == 'string') {
+                                panel.append('<li>' + message + '</li>');
+                            } else {
+                                $.each(message, function (i, msg) {
+                                    panel.append('<li>' + msg + '</li>');
+                                });
+                            }
+
+                            panel.removeClass('hidden');
+                        }
+                    }
+                }
+            });
+
+            return false;
+        });
+
+        if ($('html').hasClass('page-upload')) {
+            var html = '', tpl = $('#tpl-file-item').html(), data,
+                historyFiles, cacheKey = 'page_factory_history_upload_files';
+
+            historyFiles = JSON.parse(window.localStorage.getItem(cacheKey)) || [];
+
+            if (historyFiles.length > 0) {
+                html = App.compile(tpl, historyFiles);
+                $('.list-files .list-group-item:first').after(html);
+
+                $('[data-toggle="popover"]').popover({html: true, placement: 'right', trigger: 'hover'});
+            }
+
+            $('#btn-upload').uploadify({
+                buttonClass: "btn btn-default",
+                buttonText: '<i class="glyphicon glyphicon-upload"></i>选择图片',
+                swf: '/vendor/uploadify/uploadify.swf',
+                uploader: '/upload',
+                fileTypeExts: '*.gif; *.jpg; *.png',
+                fileSizeLimit: '250KB',
+                uploadLimit: 10,
+                onUploadSuccess: function (file, result) {
+                    result = JSON.parse(result);
+                    data = result.data;
+
+                    if (result.code == 0) {
+                        html = App.compile(tpl, [data.url]);
+
+                        $('.list-files .list-group-item:first').after(html);
+
+                        $('[data-toggle="popover"]').popover({html: true, placement: 'right', trigger: 'hover'});
+
+                        historyFiles.unshift(data.url);
+
+                        if (historyFiles.length >= 5) {
+                            historyFiles.pop();
+                        }
+
+                        window.localStorage.setItem(cacheKey, JSON.stringify(historyFiles));
+                    }
+                }
+            });
+
+
+        }
     }
 };
 

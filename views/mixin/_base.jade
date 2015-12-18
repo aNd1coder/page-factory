@@ -1,13 +1,13 @@
 mixin table()
-    form.form.form-inline.well(method="get",action="/#{page}/")
+    form.form.form-inline.well(method="get",action="/#{controllerName}/")
         .form-group
             label.control-label 项目
             select.form-control(name="project")
                 option(value="") 全部
-                if(page == 'module')
+                if(controllerName == 'module')
                     option(value="global") 全局
                 include ../component/project
-        if(page == 'module')
+        if(controllerName == 'module')
             .form-group
                 label.control-label 类型
                 select.form-control(name="filetype")
@@ -25,15 +25,15 @@ mixin table()
             label.control-label 标题
             input.form-control(name="title",value= model.title || '')
         input.btn.btn-primary(type="submit",value="搜索")
-        a.btn.btn-default(href="/#{page}/") 重置
+        a.btn.btn-default(href="/#{controllerName}/") 重置
     table.table.table-striped.table-hover
         caption
             | #{pages[page]}列表
-            a.label.label-primary(href="/#{page}/new") 新增
+            a.label.label-primary(href="/#{controllerName}/new") 新增
         thead
             tr
                 th 标题
-                th= page == 'module' ? '项目类型' : '项目'
+                th= controllerName == 'module' ? '项目类型' : '项目'
                 th 作者
                 th 创建时间
                 th 最后更新
@@ -45,15 +45,15 @@ mixin table()
             tr
                 td
                     a(href="http://#{m.project}.hai360.com/ssi/#{m.path}",target="_blank")= m.title
-                    if(page == 'module')
-                        code.btn-copy(href="javascript:;",title=m.path,rel="tooltip",data-placement="right") 复制代码
+                    if(controllerName == 'module')
+                        code.btn-copy(href="javascript:;",title=m.path) 复制代码
                 td
-                    if(page == 'module')
-                        a(href="/#{page}/?project=#{m.project}&filetype=#{m.filetype}")= (PROJECT[m.project] || '全局') + FILETYPE[m.filetype]
+                    if(controllerName == 'module')
+                        a(href="/#{controllerName}/?project=#{m.project}&filetype=#{m.filetype}")= (PROJECT[m.project] || '全局') + FILETYPE[m.filetype]
                     else
-                        a(href="/#{page}/?project=#{m.project}")= PROJECT[m.project]
+                        a(href="/#{controllerName}/?project=#{m.project}")= PROJECT[m.project]
                 td
-                    a(href="/#{page}/?author=#{m.author}")= m.author
+                    a(href="/#{controllerName}/?author=#{m.author}")= m.author
                 td= moment(new Date(m.createdAt)).format('YYYY-MM-DD HH:MM:SS')
                 td= moment(new Date(m.updatedAt)).format('YYYY-MM-DD HH:MM:SS')
                 td
@@ -72,20 +72,20 @@ mixin table()
                     else
                         span.label.label-danger 草稿
                 td
-                    a.btn.btn-default.btn-delete(href="/#{page}/delete/#{m._id}") 删除
-                    a.btn.btn-default(href="/#{page}/edit/#{m._id}") 编辑
+                    a.btn.btn-default.btn-delete(href="/#{controllerName}/delete/#{m._id}") 删除
+                    a.btn.btn-default(href="/#{controllerName}/edit/#{m._id}") 编辑
     include ../component/pagination
 
 mixin form()
     - var isHtmlEditor = model && model.filetype && model.filetype == 'html'
-    form.form.well(method="post",action="/#{page}/save")
+    form.form.well(method="post",action="/#{controllerName}/save")
         .form-group
             label.control-label 项目
             select.form-control(name="project")
-                if(page == 'module')
+                if(controllerName == 'module')
                     option(value="global") 全局
                 include ../component/project
-        if(page == 'module')
+        if(controllerName == 'module')
             .form-group
                 label.control-label 类型
                 select.form-control(name="filetype")
@@ -96,7 +96,7 @@ mixin form()
         .form-group
             label.control-label 文件名
             input.form-control(type="text",name="filename",readonly=model ? true : false,value=model ? model.filename : '',placeholder="英文或拼音小写")
-        if(page == 'module')
+        if(controllerName == 'module')
             ul.nav.nav-tabs
                 li.active
                     a(href="#content",data-toggle="tab") 内容
@@ -130,8 +130,8 @@ mixin form()
                 input(type="hidden",name="_id",value=model._id)
                 input(type="hidden",name="createdAt",value=model.createdAt)
             input.btn.btn-primary(type="submit",value="保 存")
-            a.btn.btn-default(href="/#{page}/") 返回
-    if(page == 'module')
+            a.btn.btn-default(href="/#{controllerName}/") 返回
+    if(controllerName == 'module')
         .modal.modal-module.fade
             .modal-dialog
                 .modal-content
@@ -145,14 +145,15 @@ mixin form()
                                 if(model.templateData.rows)
                                     each row in model.templateData.rows
                                         .form-group
-                                            each field,index in model.templateData.fields
+                                            if(model.templateData.fields)
+                                                each field,index in model.templateData.fields
+                                                    .input-group
+                                                        .input-group-addon= field[1]
+                                                        input.form-control(type="text",name=field[0],value=row[index],data-rule=field[2])
                                                 .input-group
-                                                    .input-group-addon= field[1]
-                                                    input.form-control(type="text",name=field[0],value=row[index],data-rule=field[2])
-                                            .input-group
-                                                button.btn.btn-primary.btn-new 新增
-                                                button.btn.btn-default.btn-delete 删除
-                                else
+                                                    button.btn.btn-primary.btn-new 新增
+                                                    button.btn.btn-default.btn-delete 删除
+                                else if(model.templateData.fields)
                                     each field, index in model.templateData.fields
                                         .form-group
                                             .input-group

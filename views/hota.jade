@@ -1,0 +1,46 @@
+extends layout/base
+
+block content
+    link(rel="stylesheet",href="/css/hota.css")
+    .form.hota_wrap
+        .input-group
+            .input-group-addon 图片地址
+            input.form-control#img_src.form-control.img_src(type="text", placeholder="请粘贴背景图片地址到这里")
+        #workshop.workshop
+            .hota-container
+                img.hota-imgholder(src=src || 'https://placeholdit.imgix.net/~text?txtsize=50&txt=1280×300&w=1280&h=300')
+                .area_info
+                .h_line
+                .v_line
+        .form-group
+            textarea#code_wrap.form-control.code_wrap
+        .form-group.form-action
+            a#btn_get.btn.btn-primary(href="javascript:;") 生成代码
+            a.btn.btn.btn-default.btn-copy(href="javascript:;") 复制代码
+    #context_menu.form.context_menu
+        .form-group
+            label.control-label 连接类型
+            select#link_type.form-control
+                option(value="") 普通连接
+                option(value="coupon") 领券连接
+        .form-group
+            label.control-label 链接内容
+            input.form-control#link_addr(type="text", placeholder="", autofocus="")
+        .form-group
+            label.control-label 提示文字
+            input.form-control#link_tit(type="text", placeholder="请输入提示文字")
+        .form-group
+            label.control-label htag
+            input.form-control#htag(type="text", placeholder="输入的 htag 将自动拼接到链接之后")
+        .form-group#open_type
+            strong 打开方式
+            label.radio-inline
+                input#_blank(type="radio", name="open_type", checked)
+                | 新窗口
+            label.radio-inline
+                input#_self(type="radio", name="open_type")
+                | 本窗口
+        .form-group.form-action
+            button#btn_confirm.btn.btn-primary 确定
+            button#btn_cancel.btn.btn-default 取消
+    script(src="/js/hota.js")

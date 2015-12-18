@@ -1,0 +1,14 @@
+extends layout/base
+
+block content
+    form.form.form-authorize.well(action="/authorize",method="post")
+        h4.page-header 登录
+        .form-group
+            label.control-label 帐　号
+            input.form-control(type="text",name="username")
+        .form-group
+            label.control-label 密　码
+            input.form-control(type="password",name="password")
+        .form-group.form-action
+            button.btn.btn-block.btn-primary 登 录
+        ul.alert.alert-danger.authorize-message.hidden
