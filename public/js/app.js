@@ -1,4 +1,15 @@
 var App = {
+    alert: function (content) {
+        var d = dialog({
+            content: content
+        });
+
+        d.show();
+
+        setTimeout(function () {
+            d.close().remove();
+        }, 2000);
+    },
     compile: (function () {
         return function (template, data) {
             var fn = new Function("data", "var p=[];p.push('" + template.replace(/[\r\t\n]/gm, " ")
@@ -16,6 +27,79 @@ var App = {
             return data ? fn(data) : '';
         }
     })(),
+    buildModule: function () {
+        var form = $('.modal-module .form-module'), formGroup = form.find('.form-group'),
+            templateData = {fields: []}, template = form.find('[name="template"]').val(),
+            isArray = $('#content').hasClass('form-inline');
+
+        if (formGroup.length > 0) {
+            if (isArray) { // 数组数据
+                templateData.rows = [];
+
+                formGroup.each(function (index, group) {
+                    var row = [];
+
+                    $(this).find('.form-control').each(function () {
+                        var me = $(this), name, label, rule, value;
+
+                        name = me.attr('name');
+                        label = $.trim(me.prev('.input-group-addon').html());
+                        rule = me.data('rule');
+                        value = $.trim(me.val());
+
+                        if (index == 0) {
+                            templateData.fields.push([name, label, rule]);
+                        }
+
+                        row.push(value);
+                    });
+
+                    templateData.rows.push(row);
+                });
+            } else {
+                formGroup.find('.form-control').each(function () {
+                    var me = $(this), name, label, rule, value;
+
+                    name = me.attr('name');
+                    label = $.trim(me.prev('.input-group-addon').html());
+                    rule = me.data('rule');
+                    value = $.trim(me.val());
+
+                    templateData.fields.push([name, label, rule, value]);
+                });
+            }
+
+            $('[name="content"]').html(App.compile(template, templateData[isArray ? 'rows' : 'fields']));
+            $('[name="templateData"]').html(JSON.stringify(templateData));
+        }
+    },
+    buildPage: function () {
+        var form = $('.modal-module .form-module'),
+            formGroup = form.find('.form-group'),
+            template = $('#tpl-page-module').html(),
+            html = '', module = [];
+
+        if (formGroup.length > 0) {
+            formGroup.each(function () {
+                var row = [];
+
+                $(this).find('.form-control').each(function () {
+                    var me = $(this), value = $.trim(me.val());
+                    row.push(value);
+                });
+
+                module.push(row);
+            });
+
+            // keep one line
+            html = App.compile(template, module).replace(/>(\s+)</gim, function (s) {
+                return s.replace(/\s+/, '');
+            });
+        }
+
+        $('[name="content"]').html(html);
+        $('[name="module"]').val(JSON.stringify(module));
+    },
     init: function () {
         $('.table').each(function () {
             var me = $(this), cols = me.find('thead th'), rows = me.find('tbody>tr');
@@ -23,21 +107,29 @@ var App = {
                 me.find('tbody').append('<tr><td style="padding: 20px 0;text-align: center;" colspan="' + cols.length + '">无相关数据</td></tr>');
             }
         }).on('click', '.btn-delete', function () {
-            var me = $(this), url = me.attr('href');
-
-            if (confirm('确认删除?')) {
-                $.ajax({
-                    type: 'DELETE',
-                    url: url,
-                    success: function (result) {
-                        if (result.code == 0) {
-                            me.parents('tr').remove();
-                        } else {
-                            alert(result.message);
+            var me = $(this), url = me.attr('href'), d = dialog({
+                title: '提示',
+                content: '确认删除?',
+                okValue: '确定',
+                ok: function () {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: url,
+                        success: function (result) {
+                            if (result.code == 0) {
+                                me.parents('tr').remove();
+                            } else {
+                                App.alert(result.message);
+                            }
                         }
-                    }
-                });
-            }
+                    });
+                },
+                cancelValue: '取消',
+                cancel: function () {
+                }
+            });
+
+            d.show();
 
             return false;
         });
@@ -59,13 +151,16 @@ var App = {
 
             return false;
         }).on('aftercopy', '.btn-copy', function () {
-            var d = dialog({
-                content: '复制成功!'
-            }).show();
+            App.alert('复制成功!');
+        });
 
-            setTimeout(function () {
-                d.close().remove();
-            }, 2000);
+        $('[name="filetype"]').change(function () {
+            var type = $(this).val();
+            $('[name="content"]')[type == 'html' ? 'wrap' : 'unwrap']('<div class="html-editor"></div>');
+        });
+
+        $('#form').submit(function () {
+            $(this).find('#content').remove();
         });
 
         var editor = $('.html-editor'), modal, form;
@@ -82,62 +177,32 @@ var App = {
             modal.on('click', '.btn-new', function () {
                 var el = $(this).parents('.form-group'), clone = el.clone();
                 el.after(clone);
-                clone.find('.form-control').val('');
+                clone.find('input.form-control').val('');
             }).on('click', '.btn-delete', function () {
-                if (confirm('确定删除?')) {
-                    $(this).parents('.form-group').remove();
-                }
+                var row = $(this).parents('.form-group'), d = dialog({
+                    title: '提示',
+                    content: '确认删除?',
+                    okValue: '确定',
+                    ok: function () {
+                        row.remove();
+                    },
+                    cancelValue: '取消',
+                    cancel: function () {
+                    }
+                });
+
+                d.show();
+
+                return false;
             }).on('click', '.btn-save', function () {
-                var templateData = {fields: []}, template = $('[name="template"]').val(),
-                    isArray = form.hasClass('form-inline'); // 数组数据
-
-                if (isArray) {
-                    templateData.rows = [];
-
-                    form.find('.form-group').each(function (index, group) {
-                        var row = [];
-
-                        $(this).find('.form-control').each(function () {
-                            var me = $(this), field = [], name, label, rule, value;
-
-                            name = me.attr('name');
-                            label = $.trim(me.prev('.input-group-addon').html());
-                            rule = me.data('rule');
-                            value = $.trim(me.val());
-
-                            if (index == 0) {
-                                field.push(name, label, rule);
-                                templateData.fields.push(field);
-                            }
-
-                            row.push(value);
-                        });
-                        templateData.rows.push(row);
-                    });
-                } else {
-                    form.find('.form-group .form-control').each(function () {
-                        var me = $(this), field = [], name, label, rule, value;
-
-                        name = me.attr('name');
-                        label = $.trim(me.prev('.input-group-addon').html());
-                        rule = me.data('rule');
-                        value = $.trim(me.val());
-
-                        field.push(name, label, rule, value);
-                        templateData.fields.push(field);
-                    });
-                }
-
-
-                $('[name="content"]').html(App.compile(template, templateData.rows));
-                $('[name="templateData"]').html(JSON.stringify(templateData));
-
+                App[$('html').hasClass('page-page') ? 'buildPage' : 'buildModule']();
                 modal.modal('hide');
+                return false;
             });
 
             form.submit(function () {
                 return false;
-            }).sortable();
+            }).find('#content').sortable();
         }
 
         $('.form-authorize').submit(function () {
@@ -189,7 +254,7 @@ var App = {
 
             $('#btn-upload').uploadify({
                 buttonClass: "btn btn-default",
-                buttonText: '<i class="glyphicon glyphicon-upload"></i>选择图片',
+                buttonText: '<i class="glyphicon glyphicon-upload"></i>选择图片上传',
                 swf: '/vendor/uploadify/uploadify.swf',
                 uploader: '/upload',
                 fileTypeExts: '*.gif; *.jpg; *.png',
@@ -216,8 +281,6 @@ var App = {
                     }
                 }
             });
-
-
         }
     }
 };

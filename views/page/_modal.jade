@@ -1,0 +1,58 @@
+.modal.modal-module.fade
+    .modal-dialog
+        .modal-content
+            .modal-header
+                a.close(href="javacript:;",data-dismiss="modal")
+                    span &times;
+                .modal-title 编辑页面内容
+            .modal-body
+                .form.form-module
+                    ul.nav.nav-tabs
+                        li.active
+                            a(href="#content",data-toggle="tab") 内容
+                        li
+                            a(href="#style",data-toggle="tab") 样式
+                        li
+                            a(href="#script",data-toggle="tab") 脚本
+                    .tab-content.well
+                        #content(class="tab-pane active form-inline")
+                            include ../component/module
+                        #style.tab-pane
+                            textarea.form-control(type="text",name="style")= model ? model.style : ''
+                        #script.tab-pane
+                            textarea.form-control(type="text",name="script")= model ? model.script : ''
+            .modal-footer
+                a.btn.btn-default(href="javascript:;",data-dismiss="modal") 关闭
+                a.btn.btn-primary.btn-save(href="javascript:;",type="submit") 保存
+script#tpl-page-module(type="text/html").
+    <% var index, type, content , background, style;
+    for (var i = 0, count = data.length, module ; i < count, module = data[i]; i++) {
+        index = i + 1;
+        type = module[1];
+        content = module[2];
+        background = (module[4] ? 'background-color:' + module[4] : '') + (module[5] ? 'background-image:url(' + module[5] + ')' : '');
+        style = background ? ' style="' + background + '"' : ''; %>
+
+    <% if (type == 'bundle' && content) { %>
+    <div id="module-index-<%= index %>" class="module module-bundle module-index-<%= index %> module-theme-<%= module[3] || 1 %>" data-id="<%= content %>"<%= style %>>
+        <i class="loading"></i>
+    </div>
+    <% } %>
+
+    <% if (type == 'slider' && content) { %>
+    <div id="module-index-<%= index %>" class="module module-slider module-index-<%= index %>" data-id="<%= content %>"<%= style %>>
+        <i class="loading"></i>
+    </div>
+    <% } %>
+
+    <% if (type == 'hota' && content) { %>
+    <div id="module-index-<%= index %>" class="module module-hota module-index-<%= index %>"<%= style %>>
+        <div class="container"><%= content.replace('class="hota-imgholder" src','class="hota-imgholder" src="http://static.hai360.com/www/img/module/b.png" data-src') %></div>
+    </div>
+    <% } %>
+
+    <% if (type == 'banner' && content) { %>
+    <div id="module-index-<%= index %>" class="module module-banner module-index-<%= index %>" data-src="<%= content %>"></div>
+    <% } %>
+
+    <% } %>

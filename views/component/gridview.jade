@@ -1,0 +1,76 @@
+form.form.form-inline.well(method="get",action="/#{controllerName}/")
+    .form-group
+        label.control-label 项目
+        select.form-control(name="project")
+            option(value="") 全部
+            if(controllerName == 'module')
+                option(value="global") 全局
+            include ../component/project
+    if(controllerName == 'module')
+        .form-group
+            label.control-label 类型
+            select.form-control(name="filetype")
+                option(value="") 全部
+                include ../component/filetype
+    .form-group
+        label.control-label 环境
+        select.form-control(name="environment")
+            option(value="") 全部
+            include ../component/environment
+    .form-group
+        label.control-label 作者
+        input.form-control(name="author",value=model.author || '')
+    .form-group
+        label.control-label 标题
+        input.form-control(name="title",value= model.title || '')
+    input.btn.btn-primary(type="submit",value="搜索")
+    a.btn.btn-default(href="/#{controllerName}/") 重置
+table.table.table-striped.table-hover
+    caption
+        | #{pages[page]}列表
+        a.label.label-primary(href="/#{controllerName}/new") 新增
+    thead
+        tr
+            th 标题
+            th= controllerName == 'module' ? '项目类型' : '项目'
+            th 作者
+            th 创建时间
+            th 最后更新
+            th 环境状态
+            th 操作
+    tbody
+    if model.length > 0
+    each m in model.data
+        tr
+            td
+                a(href="http://#{m.project == 'global' ? 'www' : m.project}.hai360.com/ssi/#{m.path}",target="_blank")= m.title
+                if(controllerName == 'module')
+                    code.btn-copy(href="javascript:;",title=m.path) 复制代码
+            td
+                if(controllerName == 'module')
+                    a(href="/#{controllerName}/?project=#{m.project}&filetype=#{m.filetype}")= (PROJECT[m.project] || '全局') + FILETYPE[m.filetype]
+                else
+                    a(href="/#{controllerName}/?project=#{m.project}")= PROJECT[m.project]
+            td
+                a(href="/#{controllerName}/?author=#{m.author}")= m.author
+            td= moment(new Date(m.createdAt)).format('YYYY-MM-DD HH:MM:SS')
+            td= moment(new Date(m.updatedAt)).format('YYYY-MM-DD HH:MM:SS')
+            td
+                if ENVIRONMENT[m.environment]
+                    if m.environment == 'dev'
+                        span.label.label-default= ENVIRONMENT[m.environment]
+                    else if m.environment == 'test'
+                        span.label.label-info= ENVIRONMENT[m.environment]
+                    else if m.environment == 'pre'
+                        span.label.label-primary= ENVIRONMENT[m.environment]
+                    else
+                        span.label.label-success= ENVIRONMENT[m.environment]
+
+                if m.published == 1
+                    span.label.label-success 已发布
+                else
+                    span.label.label-danger 草稿
+            td
+                a.btn.btn-default.btn-delete(href="/#{controllerName}/delete/#{m._id}") 删除
+                a.btn.btn-default(href="/#{controllerName}/edit/#{m._id}") 编辑
+include ../component/pagination

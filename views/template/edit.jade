@@ -1,4 +1,5 @@
 extends ../layout/base
 
 block content
-    +form()
+    form#form.form.well(method="post",action="/template/save")
+        include ../component/form

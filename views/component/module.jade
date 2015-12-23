@@ -1,0 +1,25 @@
+each m in modules
+    .form-group
+        .input-group
+            .input-group-addon 名称
+            input.form-control(type="text",value=m[0] || '')
+        .input-group.select-group
+            select.form-control
+                each name,type in MODULETYPE
+                    option(value=type,selected=m[1] ? m[1] == type : false)= name
+        .input-group
+            .input-group-addon 内容
+            input.form-control(type="text",value=m[2] || '')
+        .input-group.select-group
+            select.form-control
+                each name,theme in MODULETHEME
+                    option(value=theme,selected=m[3] ? m[3] == theme : false)= name
+        .input-group
+            .input-group-addon 背景色
+            input.form-control(type="text",value=m[4])
+        .input-group
+            .input-group-addon 背景图
+            input.form-control(type="text",value=m[5])
+        .input-group
+            a.btn.btn-primary.btn-new(href="javascript:;") 新增
+            a.btn.btn-default.btn-delete(href="javascript:;") 删除

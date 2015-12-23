@@ -18,7 +18,7 @@ module.exports = {
     sftp: function (model, dir, filename, callback) {
         var server, client;
 
-        server = setting.ssiServer[model.environment];
+        server = setting.ssi.server[model.environment];
         dir = server.path + dir;
 
         // 开发环境

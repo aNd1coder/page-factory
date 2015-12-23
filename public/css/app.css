@@ -51,6 +51,23 @@ body {
     background-color: #222;
 }
 
+.page-page .form-module .input-group {
+    width: 17.5%;
+}
+
+.page-page .form-module .input-group:last-child {
+    width: auto;
+    margin: 0;
+}
+
+.page-page .form-module .select-group {
+    width: auto;
+}
+
+.form-module .input-group-addon {
+    padding: 6px 8px;
+}
+
 .navbar-brand, .navbar-brand h1, .navbar-brand small {
     font-size: 18px;
     transition: all .2s ease-in;
@@ -193,12 +210,30 @@ input[type=checkbox] {
     max-width: 100%;
 }
 
+.ui-popup {
+    z-index: 2048 !important;
+}
+
+.ui-popup .ui-dialog {
+    padding: 0;
+}
+
+.ui-dialog .ui-dialog-title {
+    width: auto;
+    margin: 0;
+    padding: 15px;
+}
+
+.ui-dialog .ui-dialog-content {
+    padding: 0;
+}
+
 .modal-dialog .form-group {
     display: block;
     margin-bottom: 5px;
 }
 
-.modal-dialog .form-group:first-child .btn-delete {
+.modal-dialog .form-module .form-group:first-child .btn-delete {
     display: none;
 }
 
@@ -207,6 +242,7 @@ input[type=checkbox] {
 }
 
 .modal-dialog .btn {
+    margin-left: 0;
     margin-right: 5px;
 }
 
@@ -227,10 +263,6 @@ input[type=checkbox] {
     background-color: rgba(0, 0, 0, .6);
     border-radius: 4px;
     cursor: pointer;
-}
-
-textarea.form-control, .html-editor:after {
-    border-top-left-radius: 0;
 }
 
 textarea.form-control {
@@ -273,12 +305,14 @@ textarea.form-control {
 }
 
 .form-uploader {
-    margin-bottom: 20px;
-    padding: 50px 0;
+    margin-bottom: 10px;
+    padding: 60px 0 40px;
     text-align: center;
     font-size: 20px;
     border: 3px dashed #ccc;
     color: #ddd;
+    background-color: #fafafa;
+    border-radius: 4px;
 }
 
 .form-uploader .or {

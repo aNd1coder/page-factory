@@ -1,0 +1,48 @@
+- var htmlEditor = model && model.filetype && model.filetype == 'html'
+- var modules = model && model.module.length > 0 ? model.module: [['','','','','','']]
+.form-group
+    label.control-label 项目
+    select.form-control(name="project")
+        if(controllerName == 'module')
+            option(value="global") 全局
+        include ../component/project
+if(controllerName == 'module')
+    .form-group
+        label.control-label 类型
+        select.form-control(name="filetype")
+            include ../component/filetype
+if(controllerName == 'page')
+    .form-group
+        label.control-label 模版
+        select.form-control(name="template")
+            include ../component/template
+.form-group
+    label.control-label 标题
+    input.form-control(type="text",name="title",value=model ? model.title : '',placeholder=controllerName == 'page' ? '显示在网页的标题栏' : '')
+.form-group
+    label.control-label 文件名
+    input.form-control(type="text",name="filename",readonly=model ? true : false,value=model ? model.filename : '',placeholder="必须为英文或拼音小写，且不能包含空格")
+.form-group
+    label.control-label 内容
+    if(controllerName == 'page' || (controllerName == 'module' && htmlEditor))
+        .html-editor
+            textarea.form-control(type="text",name="content")= model ? model.content : ''
+    else
+        textarea.form-control(type="text",name="content")= model ? model.content : ''
+.form-group
+    label.control-label 环境
+    each name,env in ENVIRONMENT
+        label.radio-inline
+            input(type="radio",name="environment",value=env,checked=model ? model.environment == env : false)
+            = name
+.form-group
+    label.control-label 是否发布
+        input(type="checkbox",name="published",value="1",checked=model ? model.published == 1 : false)
+        span.label.label-danger 勾选则会覆盖现有文件
+.form-group.form-action
+    if(model)
+        input(type="hidden",name="_id",value=model._id)
+        input(type="hidden",name="createdAt",value=model.createdAt)
+    input(type="hidden",name="module",value=model.module ? JSON.stringify(model.module) : '')
+    a.btn.btn-default(href="/#{controllerName}/") 返回
+    input.btn.btn-primary(type="submit",value="保 存")

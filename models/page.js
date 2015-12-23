@@ -7,26 +7,16 @@ var pageSchema = new Schema({
     project: String,
     path: String,
     filename: String,
-    template: {
-        type: Schema.ObjectId,
-        ref: 'Template'
-    },
-    module: {
-        type: Schema.ObjectId,
-        ref: 'Module'
-    },
+    template: {type: Schema.ObjectId, ref: 'Template'},
+    module: [],
     author: String,
     content: String,
+    style: String,
+    script: String,
     environment: String,
     published: Number,
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
-    }
+    createdAt: {type: Date, default: Date.now},
+    updatedAt: {type: Date, default: Date.now}
 });
 
 var Page = mongoagent.model('Page', pageSchema);

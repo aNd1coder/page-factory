@@ -110,4 +110,16 @@ app.locals.FILETYPE = {
     js: 'JS链接'
 };
 
+app.locals.MODULETYPE = {
+    bundle: '商品包',
+    hota: '热点图',
+    banner: '通栏图',
+    slider: '广告位'
+};
+
+app.locals.MODULETHEME = {
+    '1': '橙色小太阳',
+    '2': '粉色大矩形'
+};
+
 module.exports = app;

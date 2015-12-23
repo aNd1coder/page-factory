@@ -40,14 +40,14 @@ body {
     position: absolute;
     height: 100px;
     width: 100px;
-    background-color: rgba(0, 255, 0, .3);
+    background-color: rgba(77, 198, 126, .6);
     top: 10px;
     left: 10px;
     outline: none;
 }
 
 .hota-container a.cur {
-    background-color: rgba(255, 34, 34, .7);
+    background-color: rgba(255, 34, 34, .8);
 }
 
 .hota-container a, .hota-container a:hover {

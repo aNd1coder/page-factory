@@ -1,4 +1,6 @@
 extends ../layout/base
 
 block content
-    +form()
+    form#form.form.well(method="post",action="/page/save")
+        include ../component/form
+        include _modal

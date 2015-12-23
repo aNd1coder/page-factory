@@ -1,0 +1,43 @@
+.modal.modal-module.fade
+    .modal-dialog
+        .modal-content
+            .modal-header
+                a.close(href="javacript:;",data-dismiss="modal")
+                    span &times;
+                .modal-title 编辑模块内容
+            .modal-body
+                .form.form-module
+                    ul.nav.nav-tabs
+                        li.active
+                            a(href="#content",data-toggle="tab") 内容
+                        li
+                            a(href="#template",data-toggle="tab") 模版
+                        li
+                            a(href="#templateData",data-toggle="tab") 数据
+                    .tab-content.well
+                        if(model && model.templateData)
+                            #content(class="tab-pane active#{model.templateData.rows ? ' form-inline' : ''}")
+                                if(model.templateData.rows)
+                                    each row in model.templateData.rows
+                                        .form-group
+                                            if(model.templateData.fields)
+                                                each field,index in model.templateData.fields
+                                                    .input-group
+                                                        .input-group-addon= field[1]
+                                                        input.form-control(type="text",name=field[0],value=row[index],data-rule=field[2])
+                                                .input-group
+                                                    a.btn.btn-primary.btn-new(href="javascript:;") 新增
+                                                    a.btn.btn-default.btn-delete(href="javascript:;") 删除
+                                else if(model.templateData.fields)
+                                    each field, index in model.templateData.fields
+                                        .form-group
+                                            .input-group
+                                                .input-group-addon= field[1]
+                                                input.form-control(type="text",name=field[0],value=field[3] || '',data-rule=field[2])
+                            #template.tab-pane
+                                textarea.form-control(type="text",name="template")= model ? model.template : ''
+                            #templateData.tab-pane
+                                textarea.form-control(type="text",name="templateData")= model ? JSON.stringify(model.templateData) : ''
+            .modal-footer
+                a.btn.btn-default(href="javascript:;",data-dismiss="modal") 关闭
+                a.btn.btn-primary.btn-save(href="javascript:;",type="submit") 保存

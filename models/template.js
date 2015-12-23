@@ -11,14 +11,8 @@ var templateSchema = new Schema({
     content: String,
     environment: String,
     published: Number,
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
-    }
+    createdAt: {type: Date, default: Date.now},
+    updatedAt: {type: Date, default: Date.now}
 });
 
 var Template = mongoagent.model('Template', templateSchema);

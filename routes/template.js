@@ -1,6 +1,7 @@
 var _ = require('lodash');
 var helper = require('../helper');
 var moment = require('moment');
+var setting = require('../config/setting');
 var express = require('express');
 var router = express.Router();
 var TemplateModel = require('../models/template');
@@ -58,10 +59,13 @@ router.get('/edit/:id', function (req, res) {
 
 router.post('/save', function (req, res) {
     var model = _.extend({}, req.body, req.params, req.query),
-        id = model._id, date, query = {author: '^.^'},
+        id = model._id, date, query = {author: '(=^.^=)'},
         published = model.published == 1 ? 1 : 0, dir, filename, path;
 
     delete  model._id;
+
+    model.title = (model.title || '').trim();
+    model.content = (model.content || '').trim();
 
     if (id) {
         query = {_id: id};
@@ -73,7 +77,7 @@ router.post('/save', function (req, res) {
     }
 
     dir = model.project + '/html/' + date + '/';
-    filename = model.filename + '.shtml';
+    filename = model.filename.trim() + setting.ssi.ext;
     path = dir + filename;
 
     model.author = req.session.user.username;

@@ -1,6 +1,7 @@
 var _ = require('lodash');
 var helper = require('../helper');
 var moment = require('moment');
+var setting = require('../config/setting');
 var express = require('express');
 var router = express.Router();
 var ModuleModel = require('../models/module');
@@ -62,10 +63,15 @@ router.get('/edit/:id', function (req, res) {
 
 router.post('/save', function (req, res) {
     var model = _.extend({}, req.body, req.params, req.query),
-        id = model._id, date, query = {author: '^.^'},
+        id = model._id, date, query = {author: '(=^.^=)'},
         published = model.published == 1 ? 1 : 0, dir, filename, path;
 
     delete  model._id;
+
+    model.title = (model.title || '').trim();
+    model.content = (model.content || '').trim();
+    model.template = (model.template || '').trim();
+    model.templateData = (model.templateData || '').trim();
 
     if (id) { // update
         query = {_id: id};
@@ -77,13 +83,19 @@ router.post('/save', function (req, res) {
     }
 
     dir = model.project + '/' + model.filetype + '/' + date + '/';
-    filename = model.filename + '.shtml';
+    filename = model.filename.trim() + setting.ssi.ext;
     path = dir + filename;
 
     model.author = req.session.user.username;
     model.path = path;
     model.environment = model.environment || 'dev';
-    model.templateData = JSON.parse(model.templateData);
+
+    if (model.templateData) {
+        model.templateData = JSON.parse(model.templateData);
+    } else {
+        delete  model.templateData;
+    }
+
     model.published = published;
     model.updatedAt = Date.now();
 
