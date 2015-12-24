@@ -7,7 +7,7 @@ var request = require('superagent');
 require('superagent-proxy')(request);
 
 router.get('/', function (req, res) {
-    res.redirect('/page/');
+    res.render('index', {title: 'Page Factory'});
 });
 
 router.get('/authorize', function (req, res) {
@@ -64,16 +64,29 @@ router.get('/upload', function (req, res) {
 });
 
 router.post('/upload', multipart(), function (req, res) {
+    var data;
+
     if (req.files) {
+        data = req.files.Filedata.path;
+    } else if (req.body.imageData) {
+        data = req.body.imageData;
+        data = data.replace(/^data:image\/\w+;base64,/, '');
+        data = new Buffer(data, 'base64');
+    }
+
+    if (data) {
         request
             .post(setting.api.upload)
-            //.proxy('http://127.0.0.1:8888')
+            .proxy('http://127.0.0.1:8888')
             .set('Content-Type', 'application/json')
-            .attach('file', req.files.Filedata.path)
+            .attach('file', data)
             .end(function (err, rsp) {
+                console.log(rsp);
                 var result = JSON.parse(rsp.text);
                 res.json(result);
             });
+    } else {
+        res.json({code: 1, message: '上传文件失败'});
     }
 });
 

@@ -9,5 +9,16 @@ module.exports = {
                 pageFactory: 'page_factory'
             }
         }
+    },
+    production: {
+        mongo: {
+            host: '6.6.6.6',
+            username: 'xxoo',
+            password: '****',
+            port: '27017',
+            db: {
+                pageFactory: 'page_factory'
+            }
+        }
     }
 };

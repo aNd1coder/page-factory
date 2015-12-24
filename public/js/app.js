@@ -1,4 +1,6 @@
 var App = {
+    uploadedFiles: [],
+    UPLOADED_FILES_CHACHE_KEY: 'page_factory_uploaded_files',
     alert: function (content) {
         var d = dialog({
             content: content
@@ -100,7 +102,35 @@ var App = {
         $('[name="content"]').html(html);
         $('[name="module"]').val(JSON.stringify(module));
     },
+    storeUploadedFiles: function () {
+        if (App.uploadedFiles.length >= 5) {
+            App.uploadedFiles.pop();
+        }
+
+        window.localStorage.setItem(App.UPLOADED_FILES_CHACHE_KEY, JSON.stringify(App.uploadedFiles));
+    },
+    imageUploader: function (blob) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $.ajax({
+                type: 'POST',
+                url: '/upload',
+                data: {imageData: e.target.result},
+                dataType: 'json',
+                success: function (result) {
+                    if (result.code == 0) {
+                        App.uploadedFiles.unshift(result.data.url);
+                    }
+                }
+            });
+        };
+
+        reader.readAsDataURL(blob);
+    },
     init: function () {
+        $.event.props.push('dataTransfer');
+
         $('.table').each(function () {
             var me = $(this), cols = me.find('thead th'), rows = me.find('tbody>tr');
             if (rows.length == 0) {
@@ -240,13 +270,12 @@ var App = {
         });
 
         if ($('html').hasClass('page-upload')) {
-            var html = '', tpl = $('#tpl-file-item').html(), data,
-                historyFiles, cacheKey = 'page_factory_history_upload_files';
+            var html = '', tpl = $('#tpl-file-item').html(), data;
 
-            historyFiles = JSON.parse(window.localStorage.getItem(cacheKey)) || [];
+            App.uploadedFiles = JSON.parse(window.localStorage.getItem(App.UPLOADED_FILES_CHACHE_KEY)) || [];
 
-            if (historyFiles.length > 0) {
-                html = App.compile(tpl, historyFiles);
+            if (App.uploadedFiles.length > 0) {
+                html = App.compile(tpl, App.uploadedFiles);
                 $('.list-files .list-group-item:first').after(html);
 
                 $('[data-toggle="popover"]').popover({html: true, placement: 'right', trigger: 'hover'});
@@ -266,19 +295,59 @@ var App = {
 
                     if (result.code == 0) {
                         html = App.compile(tpl, [data.url]);
+                        App.uploadedFiles.unshift(data.url);
+                        App.storeUploadedFiles();
 
                         $('.list-files .list-group-item:first').after(html);
-
                         $('[data-toggle="popover"]').popover({html: true, placement: 'right', trigger: 'hover'});
+                    }
+                }
+            });
 
-                        historyFiles.unshift(data.url);
+            $('.form-uploader').on('paste', function (event) {
+                var clipboardData = event.clipboardData, i = 0, items, item, types;
 
-                        if (historyFiles.length >= 5) {
-                            historyFiles.pop();
+                if (clipboardData) {
+                    items = clipboardData.items;
+
+                    if (items) {
+                        item = items[0];
+                        types = clipboardData.types || [];
+
+                        for (; i < types.length; i++) {
+                            if (types[i] === 'Files') {
+                                item = items[i];
+                            }
                         }
 
-                        window.localStorage.setItem(cacheKey, JSON.stringify(historyFiles));
+                        if (item && item.kind == 'file' && item.type.match(/^image\//i)) {
+                            App.imageUploader(item.getAsFile());
+                        }
                     }
+                }
+            }).on('dragover dragleave drop', function () {
+                return false;
+            }).on('dragover', function () {
+                $('.form-uploader').addClass('dragover');
+            }).on('dragleave', function () {
+                $('.form-uploader').removeClass('dragover');
+            }).on('drop', function (e) {
+                var i = 0, files = e.dataTransfer.files, file, type;
+
+                e.stopPropagation();
+                e.preventDefault();
+
+                for (; i < files.length; i++) {
+                    file = files[i];
+
+                    type = file.type;
+
+                    if (type.indexOf('image') == -1) {
+                        FX.alert('只支持上传图片!');
+                        return false;
+                    }
+
+                    App.imageUploader(file);
                 }
             });
         }
