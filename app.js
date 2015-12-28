@@ -45,7 +45,7 @@ app.use(function (req, res, next) {
     res.locals.controllerName = segments[1];
     res.locals.actionName = segments[2] || 'index';
 
-    if (url != "/authorize" && !req.session.user) {
+    if (url.indexOf("/authorize") == -1 && !req.session.user) {
         return res.redirect("/authorize?next=" + encodeURIComponent(url));
     } else {
         res.locals.user = req.session.user;
