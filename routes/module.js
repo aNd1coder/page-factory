@@ -7,7 +7,7 @@ var router = express.Router();
 var ModuleModel = require('../models/module');
 
 router.get('/', function (req, res) {
-    var model, query = {}, limit = 20, paging, url = req.originalUrl,
+    var model, query = {}, limit = 10, paging, url = req.originalUrl,
         sort = req.query.sort || '-updatedAt', page = parseInt(req.query.page) || 1;
 
     delete  req.query.page;

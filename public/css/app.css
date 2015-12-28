@@ -84,8 +84,8 @@ body {
     left: 15px;
     width: 30px;
     height: 30px;
-    animation: rotate 5s linear 5s infinite alternate;
-    -webkit-animation: rotate 5s linear 5s infinite alternate;
+    animation: rotate 5s linear 1s infinite alternate;
+    -webkit-animation: rotate 5s linear 1s infinite alternate;
 }
 
 .navbar-brand h1 {

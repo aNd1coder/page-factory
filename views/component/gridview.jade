@@ -27,7 +27,7 @@ form.form.form-inline.well(method="get",action="/#{controllerName}/")
     a.btn.btn-default(href="/#{controllerName}/") 重置
 table.table.table-striped.table-hover
     caption
-        | #{pages[page]}列表
+        | #{pages[controllerName]}列表
         a.label.label-primary(href="/#{controllerName}/new") 新增
     thead
         tr

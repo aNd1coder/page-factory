@@ -1,5 +1,5 @@
-- var htmlEditor = model && model.filetype && model.filetype == 'html'
-- var modules = model && model.module.length > 0 ? model.module: [['','','','','','']]
+- var htmlEditor = model && (model.templateData || model.module)
+- var modules = model && model.module && model.module.length > 0 ? model.module: [['','','','','','']]
 .form-group
     label.control-label 项目
     select.form-control(name="project")
@@ -38,11 +38,11 @@ if(controllerName == 'page')
 .form-group
     label.control-label 是否发布
         input(type="checkbox",name="published",value="1",checked=model ? model.published == 1 : false)
-        span.label.label-danger 勾选则会覆盖现有文件
+        span.label.label-danger 会覆盖已有文件
 .form-group.form-action
     if(model)
         input(type="hidden",name="_id",value=model._id)
         input(type="hidden",name="createdAt",value=model.createdAt)
-    input(type="hidden",name="module",value=model.module ? JSON.stringify(model.module) : '')
+    input(type="hidden",name="module",value=model && model.module ? JSON.stringify(model.module) : '')
     a.btn.btn-default(href="/#{controllerName}/") 返回
     input.btn.btn-primary(type="submit",value="保 存")

@@ -8,7 +8,7 @@ var expressValidator = require('express-validator');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var app = express();
-var mongo = require('./config/database')['development'].mongo;
+var mongo = require('./config/database')[app.get('env')].mongo;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
