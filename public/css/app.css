@@ -1,5 +1,5 @@
 body {
-    font: 12px "lucida grande", helvetica, arial, sans-serif;
+    font: 12px Monaco, "Microsoft YaHei", "lucida grande", helvetica, arial, sans-serif;
     background-color: #fff;
 }
 
@@ -91,7 +91,6 @@ body {
 .navbar-brand h1 {
     display: inline-block;
     margin: 0;
-    font-family: Monaco, Courier;
     color: #4dc67e;
 }
 
@@ -306,21 +305,26 @@ textarea.form-control {
     border-color: #eee;
 }
 
-.form-authorize {
+.page-authorize .form-authorize {
     width: 350px;
     margin: 100px auto;
 }
 
-.form-authorize .page-header {
+.page-authorize .form-authorize .page-header {
     margin-top: 10px;
 }
 
-.form-authorize .alert {
+.page-authorize .form-authorize .alert {
     margin-bottom: 5px;
 }
 
-.form-authorize li {
+.page-authorize .form-authorize li {
     margin-left: 15px;
+}
+
+.page-authorize .btn-block {
+    width: 100%;
+    margin: 0;
 }
 
 .form-uploader {
@@ -449,6 +453,11 @@ textarea.form-control {
     padding: 0;
 }
 
+.page-index .navbar-static-top .container-fluid {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
 .page-index .navbar-static-top {
     margin: 0;
 }
@@ -483,4 +492,29 @@ textarea.form-control {
     border-width: 1px;
     border-radius: 0.3rem;
     transition: color 0.2s, background-color 0.2s, border-color 0.2s;
+}
+
+.page-index .main-content {
+    width: 1000px;
+    margin: 30px auto 50px;
+}
+
+.page-index .main-content img {
+    max-width: 100%;
+}
+
+.page-index .main-content h3 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: normal;
+    color: #159957;
+}
+
+.page-index .main-content :first-child {
+    margin-top: 0;
+}
+
+.page-index .main-content p {
+    margin-bottom: 1em;
+    font-size: 14px;
 }
