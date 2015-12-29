@@ -77,7 +77,7 @@ router.post('/upload', multipart(), function (req, res) {
     if (data) {
         request
             .post(setting.api.upload)
-            .proxy('http://127.0.0.1:8888')
+            //.proxy('http://127.0.0.1:8888')
             .set('Content-Type', 'application/json')
             .attach('file', data)
             .end(function (err, rsp) {

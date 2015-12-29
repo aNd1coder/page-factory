@@ -1,6 +1,6 @@
 - pages = {page:'页面',template:'模版',module:'模块'}
 doctype html
-html(class= 'page-' + controllerName)
+html(class= 'page-' + (controllerName || 'index'))
     head
         meta(charset="utf-8")
         meta(name="viewport",content="width=device-width,initial-scale=1")
