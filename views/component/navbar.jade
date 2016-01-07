@@ -11,10 +11,11 @@ header.navbar.navbar-static-top
                     a(href="/upload") 图片上传
                 li.nav-hota
                     a(href="/hota") 热点图
-                li.nav-module
-                    a(href="/module/") 模块
-                li.nav-template
-                    a(href="/template/") 模版
+                if(user && user.roles.indexOf(1) == 0 /* super administrator */)
+                    li.nav-module
+                        a(href="/module/") 模块
+                    li.nav-template
+                        a(href="/template/") 模版
                 li.nav-page
                     a(href="/page/") 页面
             if(user && user.username)
