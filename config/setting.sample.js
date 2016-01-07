@@ -1,11 +1,14 @@
 module.exports = {
+    domain: '***.com',
+    imgholder: 'http://path/to/imgholder',
+    limit: 10,
     api: {
         authorize: {
             app: 'app',
             key: 'key',
-            url: '/path/to/authorize/api'
+            url: 'http://path/to/authorize/api'
         },
-        upload: '/path/to/upload/api'
+        upload: 'http://path/to/upload/api'
     },
     ssi: {
         ext: '.shtml',
@@ -15,28 +18,35 @@ module.exports = {
                 port: 22,
                 username: "xxoo",
                 password: "****",
-                path: "/path/to/dev/ssi/"
+                path: "/path/to/ssi/"
             },
             test: {
                 host: '6.6.6.6',
                 port: 22,
                 username: "xxoo",
                 password: "****",
-                path: "/path/to/test/ssi/"
+                path: "/path/to/ssi/"
             },
             pre: {
                 host: '6.6.6.6',
                 port: 22,
                 username: "xxoo",
                 password: "****",
-                path: "/path/to/pre/ssi/"
+                path: "/path/to/ssi/"
             },
             prod: {
                 host: '6.6.6.6',
                 port: 22,
                 username: "xxoo",
                 password: "****",
-                path: "/path/to/prod/ssi/"
+                path: "/path/to/ssi/"
+            },
+            page: {
+                host: '6.6.6.6',
+                port: 22,
+                username: "xxoo",
+                password: "****",
+                path: "/path/to/page/"
             }
         }
     }

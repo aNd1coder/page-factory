@@ -7,14 +7,19 @@ var router = express.Router();
 var ModuleModel = require('../models/module');
 
 router.get('/', function (req, res) {
-    var model, query = {}, limit = 10, paging, url = req.originalUrl,
-        sort = req.query.sort || '-updatedAt', page = parseInt(req.query.page) || 1;
+    var model, query = {}, paging,
+        url = req.originalUrl,
+        sort = req.query.sort || '-updatedAt',
+        page = parseInt(req.query.page) || 1,
+        limit = setting.limit,
+        skip = (page - 1) * limit;
 
     delete  req.query.page;
     delete  req.query.sort;
 
+    // build query parameters
     for (var q in req.query) {
-        if (req.query[q]) {
+        if (req.query.hasOwnProperty(q)) {
             query[q] = new RegExp(req.query[q]);
         }
     }
@@ -25,7 +30,7 @@ router.get('/', function (req, res) {
         }
 
         ModuleModel.find(query, null,
-            {limit: limit, skip: page - 1, sort: sort},
+            {limit: limit, skip: skip, sort: sort},
             function (err, data) {
                 if (err) {
                     console.log(err);
@@ -34,7 +39,7 @@ router.get('/', function (req, res) {
                 paging = helper.paging(url, page, total, limit);
 
                 model = {
-                    sort: sort,
+                    total: total,
                     prev: paging.prev,
                     next: paging.next,
                     data: data

@@ -8,12 +8,19 @@ var TemplateModel = require('../models/template');
 var PageModel = require('../models/page');
 
 router.get('/', function (req, res) {
-    var model, query = {}, page = parseInt(req.query.page) || 1, limit = 20;
+    var model, query = {}, paging,
+        url = req.originalUrl,
+        sort = req.query.sort || '-updatedAt',
+        page = parseInt(req.query.page) || 1,
+        limit = setting.limit,
+        skip = (page - 1) * limit;
 
     delete  req.query.page;
+    delete  req.query.sort;
 
+    // build query parameters
     for (var q in req.query) {
-        if (req.query[q]) {
+        if (req.query.hasOwnProperty(q)) {
             query[q] = new RegExp(req.query[q]);
         }
     }
@@ -24,15 +31,16 @@ router.get('/', function (req, res) {
         }
 
         PageModel.find(query, null,
-            {limit: limit, skip: page - 1, sort: {updatedAt: -1}},
+            {limit: limit, skip: skip, sort: sort},
             function (err, data) {
                 if (err) {
                     console.log(err);
                 }
 
-                var paging = helper.paging(req.originalUrl, page, total, limit);
+                paging = helper.paging(url, page, total, limit);
 
                 model = {
+                    total: total,
                     prev: paging.prev,
                     next: paging.next,
                     data: data
@@ -95,8 +103,8 @@ router.post('/save', function (req, res) {
         date = moment().format('YYYYMM');
     }
 
-    dir = model.project + '/html/' + date + '/';
-    filename = model.filename.trim() + setting.ssi.ext;
+    dir = date + '/';
+    filename = model.filename.trim() + '.html';
     path = dir + filename;
 
     model.author = req.session.user.username;
@@ -122,11 +130,12 @@ router.post('/save', function (req, res) {
                 } else {
                     if (published) {
                         // merge template & page content
-                        model.content = template.content
-                            .replace(/{{title}}/gim, model.title)
-                            .replace(/{{content}}/gim, model.content)
-                            .replace(/{{style}}/gim, model.style)
-                            .replace(/{{script}}/gim, model.script);
+                        model.content = template.content.replace(/{{(\w+)}}/gi, function (m, p) {
+                            return model[p];
+                        });
+
+                        // push to page server
+                        model.environment = 'page';
 
                         helper.sftp(model, dir, filename, function () {
                             res.redirect('/page/');

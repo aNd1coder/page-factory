@@ -47,7 +47,7 @@ script#tpl-page-module(type="text/html").
 
     <% if (type == 'hota' && content) { %>
     <div id="module-index-<%= index %>" class="module module-hota module-index-<%= index %>"<%= style %>>
-        <div class="container"><%= content.replace('class="hota-imgholder" src','class="hota-imgholder" src="http://static.hai360.com/www/img/module/b.png" data-src') %></div>
+        <div class="container"><%= content.replace('class="hota-imgholder" src','class="hota-imgholder" src="#{setting.imgholder}" data-src') %></div>
     </div>
     <% } %>
 

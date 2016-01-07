@@ -70,8 +70,6 @@ router.post('/upload', multipart(), function (req, res) {
         data = req.files.Filedata.path;
     } else if (req.body.imageData) {
         data = req.body.imageData;
-        data = data.replace(/^data:image\/\w+;base64,/, '');
-        data = new Buffer(data, 'base64');
     }
 
     if (data) {

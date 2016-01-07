@@ -141,6 +141,13 @@ body {
     vertical-align: 1px;
 }
 
+.table caption .badge {
+    position: relative;
+    top: -10px;
+    left: 2px;
+    margin-right: 10px;
+}
+
 .table td .label {
     margin-right: 5px;
     padding: .2em .4em;

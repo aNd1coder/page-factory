@@ -90,6 +90,7 @@ app.use(function (err, req, res, next) {
 
 // locals
 app.locals.moment = require('moment');
+app.locals.setting = require('./config/setting');
 
 app.locals.ENVIRONMENT = {
     dev: '开发环境',
@@ -114,7 +115,7 @@ app.locals.MODULETYPE = {
     bundle: '商品包',
     hota: '热点图',
     banner: '通栏图',
-    slider: '广告位'
+    slider: '轮播图'
 };
 
 app.locals.MODULETHEME = {
