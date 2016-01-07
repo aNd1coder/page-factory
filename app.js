@@ -34,7 +34,7 @@ app.use(session({
     })
 }));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({extended: false, limit: '5mb'}));
 app.use(expressValidator());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -45,7 +45,7 @@ app.use(function (req, res, next) {
     res.locals.controllerName = segments[1];
     res.locals.actionName = segments[2] || 'index';
 
-    if (url.indexOf("/authorize") == -1 && !req.session.user) {
+    if (url != '/' && url.indexOf("/authorize") == -1 && !req.session.user) {
         return res.redirect("/authorize?next=" + encodeURIComponent(url));
     } else {
         res.locals.user = req.session.user;

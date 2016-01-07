@@ -18,8 +18,8 @@ header.navbar.navbar-static-top
                         a(href="/template/") 模版
                 li.nav-page
                     a(href="/page/") 页面
-            if(user && user.username)
-                ul.nav.navbar-nav.navbar-right
+            ul.nav.navbar-nav.navbar-right
+                if(user && user.username)
                     li
                         a(href="javascript:;",data-toggle="dropdown")
                             = user.username
@@ -27,3 +27,6 @@ header.navbar.navbar-static-top
                         ul.dropdown-menu
                             li
                                 a(href="/logout") 退出
+                else
+                    li
+                        a(href="/authorize") 登录

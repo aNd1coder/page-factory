@@ -1,3 +1,4 @@
+var fs = require('fs');
 var express = require('express');
 var router = express.Router();
 var setting = require('../config/setting');
@@ -16,7 +17,7 @@ router.get('/authorize', function (req, res) {
 
 router.get('/logout', function (req, res) {
     req.session.user = null;
-    res.redirect('/authorize');
+    res.redirect('/');
 });
 
 router.post('/authorize', function (req, res) {
@@ -64,22 +65,26 @@ router.get('/upload', function (req, res) {
 });
 
 router.post('/upload', multipart(), function (req, res) {
-    var data;
+    var data, file, ext;
 
-    if (req.files) {
-        data = req.files.Filedata.path;
-    } else if (req.body.imageData) {
+    if (req.body.imageData) {
         data = req.body.imageData;
+        ext = data.match(/^data:image\/(\w+);base64,/)[1];
+        file = 'tmp.' + ext;
+        data = data.replace(/^data:image\/\w+;base64,/, '');
+        data = new Buffer(data, 'base64');
+        fs.writeFileSync(file, data);
+        data = file;
+    } else {
+        data = req.files.Filedata.path;
     }
 
     if (data) {
-        request
-            .post(setting.api.upload)
+        request.post(setting.api.upload)
             //.proxy('http://127.0.0.1:8888')
             .set('Content-Type', 'application/json')
             .attach('file', data)
             .end(function (err, rsp) {
-                console.log(rsp);
                 var result = JSON.parse(rsp.text);
                 res.json(result);
             });

@@ -1,7 +1,7 @@
 var App = {
     uploadedFiles: [],
     UPLOADED_FILES_CHACHE_KEY: 'page_factory_uploaded_files',
-    alert: function (content) {
+    alert: function (content, time) {
         var d = dialog({
             content: content
         });
@@ -10,7 +10,7 @@ var App = {
 
         setTimeout(function () {
             d.close().remove();
-        }, 2000);
+        }, time || 2000);
     },
     compile: (function () {
         return function (template, data) {
@@ -102,7 +102,13 @@ var App = {
         $('[name="content"]').html(html);
         $('[name="module"]').val(JSON.stringify(module));
     },
-    storeUploadedFiles: function () {
+    storeUploadedFiles: function (url) {
+        var tpl = $('#tpl-file-item').html(), html = App.compile(tpl, [url]);
+        $('.list-files .list-group-item:first').after(html);
+        $('[data-toggle="popover"]').popover({html: true, placement: 'right', trigger: 'hover'});
+
+        App.uploadedFiles.unshift(url);
+
         if (App.uploadedFiles.length >= 5) {
             App.uploadedFiles.pop();
         }
@@ -112,6 +118,8 @@ var App = {
     imageUploader: function (blob) {
         var reader = new FileReader();
 
+        App.alert('图片上传中，请稍等...', 1000000000);
+
         reader.onload = function (e) {
             $.ajax({
                 type: 'POST',
@@ -119,8 +127,13 @@ var App = {
                 data: {imageData: e.target.result},
                 dataType: 'json',
                 success: function (result) {
-                    if (result.code == 0) {
-                        App.uploadedFiles.unshift(result.data.url);
+                    var code = result.code, message = code == 0 ? '上传成功!' : result.message;
+
+                    dialog.getCurrent().remove();
+                    App.alert(message);
+
+                    if (code == 0) {
+                        App.storeUploadedFiles(result.data.url);
                     }
                 }
             });
@@ -294,12 +307,7 @@ var App = {
                     data = result.data;
 
                     if (result.code == 0) {
-                        html = App.compile(tpl, [data.url]);
-                        App.uploadedFiles.unshift(data.url);
-                        App.storeUploadedFiles();
-
-                        $('.list-files .list-group-item:first').after(html);
-                        $('[data-toggle="popover"]').popover({html: true, placement: 'right', trigger: 'hover'});
+                        App.storeUploadedFiles(data.url);
                     }
                 }
             });
@@ -343,7 +351,7 @@ var App = {
                     type = file.type;
 
                     if (type.indexOf('image') == -1) {
-                        FX.alert('只支持上传图片!');
+                        App.alert('只支持上传图片!');
                         return false;
                     }
 
