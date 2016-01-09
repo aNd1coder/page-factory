@@ -181,30 +181,29 @@ $(function () {
         });
 
         // 呼出右键菜单
-        $(config.canvas).on('contextmenu', function (e) {
+        $(config.canvas).on('contextmenu dblclick', 'a', function (e) {
             var coupon;
             e.preventDefault();
 
-            if (e.target.tagName.toLocaleLowerCase() === 'a') {
-                $(config.context_menu).show().css('left', e.pageX).css('top', e.pageY).draggable();
-                $cur = $(e.target);
-                $cur.addClass('cur').siblings().removeClass('cur');
-                coupon = $cur.attr('data-coupon');
-                $(config.link_type).val(coupon ? 'coupon' : '');
-                $(config.link).val(coupon ? coupon : $cur.attr('href').replace(/\?htag=.*/g, ''));
-                $('#link_tit').val($cur.attr('title'));
+            $(config.context_menu).show().css('left', e.pageX).css('top', e.pageY).draggable();
+            $cur = $(e.target);
+            $cur.addClass('cur').siblings().removeClass('cur');
+            coupon = $cur.attr('data-coupon');
+            $(config.link_type).val(coupon ? 'coupon' : '');
+            $(config.link).val(coupon ? coupon : $cur.attr('href').replace(/\?htag=.*/g, ''));
+            $('#link_tit').val($cur.attr('title'));
 
-                $(config.htag).val($cur.attr('href').toLocaleLowerCase().indexOf('htag') > 0 ? $cur.attr('href').match(/htag=([.0-9]*)/i)[1] : '');
+            $(config.htag).val($cur.attr('href').toLocaleLowerCase().indexOf('htag') > 0 ? $cur.attr('href').match(/htag=([.0-9]*)/i)[1] : '');
 
 
-                if ($(e.target).attr('target') != undefined) {
-                    $('#' + $(e.target).attr('target'))[0].checked = true;
-                }
-
-                setTimeout(function () {
-                    $(config.link).focus();
-                }, 100);
+            if ($(e.target).attr('target') != undefined) {
+                $('#' + $(e.target).attr('target'))[0].checked = true;
             }
+
+            setTimeout(function () {
+                $(config.link).focus();
+            }, 100);
+
             e.stopPropagation();
         });
 
@@ -282,6 +281,7 @@ $(function () {
             if ($cur && (key == 46 || key == 8)) {
                 if ($(config.context_menu).is(':hidden')) {
                     $cur.remove();
+                    return false;
                 }
             }
 

@@ -29,7 +29,9 @@ table.table.table-striped.table-hover
     caption
         | #{pages[controllerName]}列表
         span.badge= model.total
-        a.label.label-primary(href="/#{controllerName}/new") 新增
+        a.label.label-primary(href="/#{controllerName}/new")
+            i.glyphicon.glyphicon-plus-sign
+            | 新增
     thead
         tr
             th 标题

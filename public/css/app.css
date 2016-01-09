@@ -122,8 +122,12 @@ body {
     text-shadow: none;
 }
 
-.table a {
-    margin-right: 5px;
+.table th:last-child, .table td:last-child {
+    text-align: right;
+}
+
+.table .btn {
+    margin-left: 5px;
 }
 
 .table caption {
@@ -135,17 +139,23 @@ body {
     color: #333;
 }
 
-.table caption a {
-    margin-left: 10px;
-    padding: .2em .5em;
-    vertical-align: 1px;
+.table caption .label-primary {
+    float: right;
+    padding: .5em 1em;
+    vertical-align: 3px;
+}
+
+.table caption .glyphicon {
+    top: 2px;
+    margin-right: 5px;
 }
 
 .table caption .badge {
     position: relative;
-    top: -10px;
-    left: 2px;
+    top: -1px;
+    left: 5px;
     margin-right: 10px;
+    background-color: #c0c0c0;
 }
 
 .table td .label {
@@ -154,6 +164,7 @@ body {
 }
 
 .table code {
+    margin-left: 5px;
     cursor: pointer;
 }
 
@@ -206,6 +217,7 @@ input[type=checkbox] {
 
 .pagination {
     float: right;
+    padding-right: 10px;
     margin-top: 0;
 }
 

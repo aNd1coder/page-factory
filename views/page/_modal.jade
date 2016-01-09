@@ -25,34 +25,35 @@
                 a.btn.btn-default(href="javascript:;",data-dismiss="modal") 关闭
                 a.btn.btn-primary.btn-save(href="javascript:;",type="submit") 保存
 script#tpl-page-module(type="text/html").
-    <% var index, type, content , background, style;
-    for (var i = 0, count = data.length, module ; i < count, module = data[i]; i++) {
-        index = i + 1;
-        type = module[1];
-        content = module[2];
-        background = (module[4] ? 'background-color:' + module[4] : '') + (module[5] ? 'background-image:url(' + module[5] + ')' : '');
-        style = background ? ' style="' + background + '"' : ''; %>
+    <% for (var i = 0, count = data.length, module ; i < count, module = data[i]; i++) {
+        var index = 'module-index-' + (i + 1);
+        var type = module[1];
+        var klass = 'module module-' + type + ' ' + index;
+        var content = module[2];
+        var background = (module[4] ? 'background-color:' + module[4] : '') + (module[5] ? 'background-image:url(' + module[5] + ')' : '');
+        var style = background ? ' style="' + background + '"' : '';
 
-    <% if (type == 'bundle' && content) { %>
-    <div id="module-index-<%= index %>" class="module module-bundle module-index-<%= index %> module-theme-<%= module[3] || 1 %>" data-id="<%= content %>"<%= style %>>
-        <i class="loading"></i>
-    </div>
-    <% } %>
+    if(content){
+        if (type == 'bundle') { %>
+            <div id="<%= index %>" class="<%= klass %> module-theme-<%= module[3] || 1 %>" data-id="<%= content %>"<%= style %>>
+                <i class="loading"></i>
+            </div>
+        <% }
 
-    <% if (type == 'slider' && content) { %>
-    <div id="module-index-<%= index %>" class="module module-slider module-index-<%= index %>" data-id="<%= content %>"<%= style %>>
-        <i class="loading"></i>
-    </div>
-    <% } %>
+        if (type == 'slider') { %>
+        <div id="<%= index %>" class="<%= klass %>" data-id="<%= content %>"<%= style %>>
+            <i class="loading"></i>
+        </div>
+        <% }
 
-    <% if (type == 'hota' && content) { %>
-    <div id="module-index-<%= index %>" class="module module-hota module-index-<%= index %>"<%= style %>>
-        <div class="container"><%= content.replace('class="hota-imgholder" src','class="hota-imgholder" src="#{setting.imgholder}" data-src') %></div>
-    </div>
-    <% } %>
+        if (type == 'hota') { %>
+        <div id="<%= index %>" class="<%= klass %>"<%= style %>>
+            <div class="container"><%= content.replace('class="hota-imgholder" src','class="hota-imgholder" src="#{setting.imgholder}" data-src') %></div>
+        </div>
+        <% }
 
-    <% if (type == 'banner' && content) { %>
-    <div id="module-index-<%= index %>" class="module module-banner module-index-<%= index %>" data-src="<%= content %>"></div>
-    <% } %>
-
-    <% } %>
+        if (type == 'banner') { %>
+        <div id="<%= index %>" class="<%= klass %>" data-src="<%= content %>"></div>
+        <% }
+        }
+    }%>

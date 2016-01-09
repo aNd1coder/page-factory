@@ -78,7 +78,7 @@ var App = {
     buildPage: function () {
         var form = $('.modal-module .form-module'),
             formGroup = form.find('.form-group'),
-            template = $('#tpl-page-module').html(),
+            template = $.trim($('#tpl-page-module').html()),
             html = '', module = [];
 
         if (formGroup.length > 0) {
@@ -198,55 +198,59 @@ var App = {
         });
 
         $('[name="filetype"]').change(function () {
-            var type = $(this).val();
-            $('[name="content"]')[type == 'html' ? 'wrap' : 'unwrap']('<div class="html-editor"></div>');
+            var type = $(this).val(), content = $('[name="content"]');
+
+            if (type == 'html') {
+                content.wrap('<div class="html-editor"></div>');
+            } else {
+                if (content.parent('.html-editor').length > 0) {
+                    content.unwrap();
+                }
+            }
         });
 
         $('#form').submit(function () {
             $(this).find('#content').remove();
         });
 
-        var editor = $('.html-editor'), modal, form;
-        if (editor.length == 1) {
-            modal = $('.modal-module');
-            form = modal.find('.form-module');
+        var modal = $('.modal-module');
+        var form = modal.find('.form-module');
 
-            editor.click(function () {
-                var width = $(window).width();
-                modal.find('.modal-dialog').width(width - 40);
-                modal.modal();
+        $('body').on('click', '.html-editor', function () {
+            var width = $(window).width();
+            modal.find('.modal-dialog').width(width - 40);
+            modal.modal();
+        });
+
+        modal.on('click', '.btn-new', function () {
+            var el = $(this).parents('.form-group'), clone = el.clone();
+            el.after(clone);
+            clone.find('input.form-control').val('');
+        }).on('click', '.btn-delete', function () {
+            var row = $(this).parents('.form-group'), d = dialog({
+                title: '提示',
+                content: '确认删除?',
+                okValue: '确定',
+                ok: function () {
+                    row.remove();
+                },
+                cancelValue: '取消',
+                cancel: function () {
+                }
             });
 
-            modal.on('click', '.btn-new', function () {
-                var el = $(this).parents('.form-group'), clone = el.clone();
-                el.after(clone);
-                clone.find('input.form-control').val('');
-            }).on('click', '.btn-delete', function () {
-                var row = $(this).parents('.form-group'), d = dialog({
-                    title: '提示',
-                    content: '确认删除?',
-                    okValue: '确定',
-                    ok: function () {
-                        row.remove();
-                    },
-                    cancelValue: '取消',
-                    cancel: function () {
-                    }
-                });
+            d.show();
 
-                d.show();
+            return false;
+        }).on('click', '.btn-save', function () {
+            App[$('html').hasClass('page-page') ? 'buildPage' : 'buildModule']();
+            modal.modal('hide');
+            return false;
+        });
 
-                return false;
-            }).on('click', '.btn-save', function () {
-                App[$('html').hasClass('page-page') ? 'buildPage' : 'buildModule']();
-                modal.modal('hide');
-                return false;
-            });
-
-            form.submit(function () {
-                return false;
-            }).find('#content').sortable();
-        }
+        form.submit(function () {
+            return false;
+        }).find('#content').sortable();
 
         $('.form-authorize').submit(function () {
             var form = $(this);
@@ -344,6 +348,8 @@ var App = {
 
                 e.stopPropagation();
                 e.preventDefault();
+
+                $('.form-uploader').removeClass('dragover');
 
                 for (; i < files.length; i++) {
                     file = files[i];
