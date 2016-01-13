@@ -105,7 +105,7 @@ var App = {
     storeUploadedFiles: function (url) {
         var tpl = $('#tpl-file-item').html(), html = App.compile(tpl, [url]);
         $('.list-files .list-group-item:first').after(html);
-        $('[data-toggle="popover"]').popover({html: true, placement: 'right', trigger: 'hover'});
+        $('[data-toggle="popover"]').popover({html: true, placement: 'top', trigger: 'hover'});
 
         App.uploadedFiles.unshift(url);
 
@@ -295,7 +295,7 @@ var App = {
                 html = App.compile(tpl, App.uploadedFiles);
                 $('.list-files .list-group-item:first').after(html);
 
-                $('[data-toggle="popover"]').popover({html: true, placement: 'right', trigger: 'hover'});
+                $('[data-toggle="popover"]').popover({html: true, placement: 'top', trigger: 'hover'});
             }
 
             $('#btn-upload').uploadify({
