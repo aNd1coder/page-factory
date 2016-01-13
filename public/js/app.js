@@ -109,7 +109,7 @@ var App = {
 
         App.uploadedFiles.unshift(url);
 
-        if (App.uploadedFiles.length > 5) {
+        if (App.uploadedFiles.length > 10) {
             App.uploadedFiles.pop();
         }
 
