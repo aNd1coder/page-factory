@@ -1,6 +1,7 @@
 module.exports = {
     domain: '***.com',
     imgholder: 'http://path/to/imgholder',
+    doc: 'http://samgui.com/page-factory/',
     limit: 10,
     api: {
         authorize: {

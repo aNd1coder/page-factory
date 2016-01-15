@@ -13,11 +13,13 @@ header.navbar.navbar-static-top
                     a(href="/hota") 热点图
                 li.nav-module
                     a(href="/module/") 模块
-                if(user && user.roles.indexOf(1) == 0 /* super administrator */)
+                if(user && user.isSuperAdmin)
                     li.nav-template
                         a(href="/template/") 模版
                 li.nav-page
                     a(href="/page/") 页面
+                li.nav-doc
+                    a(href=setting.doc,target="_blank") 帮助
             ul.nav.navbar-nav.navbar-right
                 if(user && user.username)
                     li

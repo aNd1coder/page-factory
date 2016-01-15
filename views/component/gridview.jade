@@ -71,7 +71,7 @@ table.table.table-striped.table-hover
                 else
                     span.label.label-danger 草稿
             td
-                if(user && user.roles.indexOf(1) == 0 /* super administrator */)
+                if(user.isSuperAdmin)
                     a.btn.btn-default.btn-delete(href="/#{controllerName}/delete/#{m._id}") 删除
                 a.btn.btn-default(href="/#{controllerName}/edit/#{m._id}") 编辑
 include ../component/pagination

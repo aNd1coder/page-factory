@@ -40,7 +40,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function (req, res, next) {
-    var url = req.originalUrl, segments = url.split('?')[0].split('/');
+    var url = req.originalUrl, segments = url.split('?')[0].split('/'), user;
 
     res.locals.controllerName = segments[1];
     res.locals.actionName = segments[2] || 'index';
@@ -48,7 +48,9 @@ app.use(function (req, res, next) {
     if (url != '/' && url.indexOf("/authorize") == -1 && !req.session.user) {
         return res.redirect("/authorize?next=" + encodeURIComponent(url));
     } else {
-        res.locals.user = req.session.user;
+        user = req.session.user;
+        user.isSuperAdmin = user && user.roles.indexOf(1) == 0;
+        res.locals.user = user;
     }
 
     next();
@@ -100,8 +102,8 @@ app.locals.ENVIRONMENT = {
 };
 
 app.locals.PROJECT = {
-    www: '主站',
     act: '活动',
+    www: '主站',
     m: 'H5'
 };
 
