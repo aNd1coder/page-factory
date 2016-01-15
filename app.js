@@ -9,6 +9,7 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var app = express();
 var mongo = require('./config/database')[app.get('env')].mongo;
+var _ = require('lodash');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -40,7 +41,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function (req, res, next) {
-    var url = req.originalUrl, segments = url.split('?')[0].split('/'), user;
+    var url = req.originalUrl, segments = url.split('?')[0].split('/'), user, isSuperAdmin;
 
     res.locals.controllerName = segments[1];
     res.locals.actionName = segments[2] || 'index';
@@ -49,7 +50,8 @@ app.use(function (req, res, next) {
         return res.redirect("/authorize?next=" + encodeURIComponent(url));
     } else {
         user = req.session.user;
-        user.isSuperAdmin = user && user.roles.indexOf(1) == 0;
+        isSuperAdmin = user && user.roles.indexOf(1) == 0;
+        user = _.extend(user, {isSuperAdmin: isSuperAdmin});
         res.locals.user = user;
     }
 
