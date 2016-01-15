@@ -126,6 +126,10 @@ body {
     text-align: right;
 }
 
+.table td:first-child a {
+    margin-left: -6px;
+}
+
 .table .btn {
     margin-left: 5px;
 }

@@ -35,7 +35,7 @@ table.table.table-striped.table-hover
     thead
         tr
             th 标题
-            th= controllerName == 'module' ? '项目类型' : '项目'
+            th 文件名
             th 作者
             th 创建时间
             th 最后更新
@@ -46,14 +46,11 @@ table.table.table-striped.table-hover
     each m in model.data
         tr
             td
-                a(href="http://#{m.project == 'global' ? 'www' : m.project}.#{setting.domain + (controllerName == 'page' ? '' : '/ssi')}/#{m.path}",target="_blank")= m.title
+                - var url = 'http://' + (m.project == 'global' ? 'www' : m.project) + '.' + setting.domain + (controllerName == 'page' ? '' : '/ssi') + '/' + m.path;
+                a(href="#{url}",target="_blank")= '【' + (PROJECT[m.project] || '全局') + (m.filetype ? FILETYPE[m.filetype] : '') + '】' + m.title
                 if(controllerName == 'module')
                     code.btn-copy(href="javascript:;",title=m.path) 复制代码
-            td
-                if(controllerName == 'module')
-                    a(href="/#{controllerName}/?project=#{m.project}&filetype=#{m.filetype}")= (PROJECT[m.project] || '全局') + FILETYPE[m.filetype]
-                else
-                    a(href="/#{controllerName}/?project=#{m.project}")= PROJECT[m.project]
+            td= m.filename
             td
                 a(href="/#{controllerName}/?author=#{m.author}")= m.author
             td= moment(new Date(m.createdAt)).format('YYYY-MM-DD HH:MM:SS')
@@ -74,6 +71,7 @@ table.table.table-striped.table-hover
                 else
                     span.label.label-danger 草稿
             td
-                a.btn.btn-default.btn-delete(href="/#{controllerName}/delete/#{m._id}") 删除
+                if(user && user.roles.indexOf(1) == 0 /* super administrator */)
+                    a.btn.btn-default.btn-delete(href="/#{controllerName}/delete/#{m._id}") 删除
                 a.btn.btn-default(href="/#{controllerName}/edit/#{m._id}") 编辑
 include ../component/pagination

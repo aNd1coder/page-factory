@@ -33,11 +33,12 @@ script#tpl-page-module(type="text/html").
         var background = (module[4] ? 'background-color:' + module[4] : '') + (module[5] ? 'background-image:url(' + module[5] + ')' : '');
         var style = background ? ' style="' + background + '"' : '';
 
-    if(content){
-        if (type == 'bundle') { %>
-            <div id="<%= index %>" class="<%= klass %> module-theme-<%= module[3] || 1 %>" data-id="<%= content %>"<%= style %>>
-                <i class="loading"></i>
-            </div>
+    if(content){ %>
+        <a name="<%= index %>" title="<%= module[0] %>"></a>
+        <% if (type == 'bundle') { %>
+        <div id="<%= index %>" class="<%= klass %> module-theme-<%= module[3] || 1 %>" data-id="<%= content %>"<%= style %>>
+            <i class="loading"></i>
+        </div>
         <% }
 
         if (type == 'slider') { %>

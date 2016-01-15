@@ -106,9 +106,9 @@ app.locals.PROJECT = {
 };
 
 app.locals.FILETYPE = {
-    html: 'HTML片段',
-    css: 'CSS链接',
-    js: 'JS链接'
+    html: 'HTML',
+    css: 'CSS',
+    js: 'JS'
 };
 
 app.locals.MODULETYPE = {
