@@ -18,23 +18,38 @@
                     .tab-content.well
                         #content(class="tab-pane active#{model && model.templateData && model.templateData.rows ? ' form-inline' : ''}")
                             if(model && model.templateData)
-                                if(model.templateData.rows)
-                                    each row in model.templateData.rows
+                                - var rows = model.templateData.rows
+                                - var fields = model.templateData.fields
+                                - var fieldCount = Object.keys(fields).length
+                                - var width = 100 / (fieldCount + 1)
+                                if(rows)
+                                    each row in rows
                                         .form-group
-                                            if(model.templateData.fields)
-                                                each field,index in model.templateData.fields
-                                                    .input-group
-                                                        .input-group-addon= field[1]
-                                                        input.form-control(type="text",name=field[0],value=row[index],data-rule=field[2])
-                                                .input-group
-                                                    a.btn.btn-primary.btn-new(href="javascript:;") 新增
-                                                    a.btn.btn-default.btn-delete(href="javascript:;") 删除
-                                else if(model.templateData.fields)
-                                    each field, index in model.templateData.fields
+                                            each index,field in row
+                                                .input-group(style="width:#{width}%")
+                                                    - var option = fields[field].option
+                                                    if(option && Object.keys(option).length > 0)
+                                                        select.form-control(name=field,title=fields[field].label,required=fields[field].required !== false)
+                                                            each text,key in option
+                                                                option(value=key,selected=key == row[field])= text
+                                                    else
+                                                        .input-group-addon= fields[field].label
+                                                        input.form-control(type=fields[field].type || 'text',name=field,value=row[field],title=fields[field].label,required=fields[field].required !== false)
+                                            .input-group(style="width:#{width}%")
+                                                a.btn.btn-primary.btn-new(href="javascript:;") 新增
+                                                a.btn.btn-default.btn-delete(href="javascript:;") 删除
+                                else if(fields)
+                                    each index,field in fields
                                         .form-group
                                             .input-group
-                                                .input-group-addon= field[1]
-                                                input.form-control(type="text",name=field[0],value=field[3] || '',data-rule=field[2])
+                                                - var option = fields[field].option
+                                                if(option && Object.keys(option).length > 0)
+                                                    select.form-control(name=field,title=fields[field].label,required=fields[field].required !== false)
+                                                        each text,key in option
+                                                            option(value=key,selected=key == fields[field].value)= text
+                                                else
+                                                    .input-group-addon= fields[field].label
+                                                    input.form-control(type=fields[field].type,name=fields[field],value=fields[field].value || '',title=fields[field].label,required=fields[field].required !== false)
                         if(user.isSuperAdmin)
                             #template.tab-pane
                                 textarea.form-control(type="text",name="template")= model ? model.template : ''

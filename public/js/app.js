@@ -31,55 +31,78 @@ var App = {
     })(),
     buildModule: function () {
         var form = $('.modal-module .form-module'), formGroup = form.find('.form-group'),
-            templateData = {fields: []}, template = form.find('[name="template"]').val(),
-            isArray = $('#content').hasClass('form-inline');
+            templateData = {fields: {}}, template = form.find('[name="template"]').val(),
+            isArray = $('#content').hasClass('form-inline'), html;
 
         if (formGroup.length > 0) {
+            (isArray ? formGroup.eq(0) : formGroup).find('.form-control').each(function () {
+                var me = $(this), name, label, type, required, value, option = {};
+
+                name = me.attr('name');
+                label = me.attr('title');
+                type = me.attr('type');
+                required = !!me.attr('required');
+                value = $.trim(me.val());
+                value = type == 'number' ? parseInt(value) : value;
+
+                if (me.is('select')) {
+                    me.find('option').each(function () {
+                        var that = $(this), key = that.val();
+                        option[key] = that.text();
+                    });
+                }
+
+                templateData.fields[name] = {label: label};
+
+                if (!isArray) {
+                    templateData.fields[name].value = value;
+                }
+
+                if (type) {
+                    templateData.fields[name].type = type;
+                }
+
+                if (!required) {
+                    templateData.fields[name].required = false;
+                }
+
+                if (Object.keys(option).length > 0) {
+                    templateData.fields[name].option = option;
+                }
+            });
+
             if (isArray) { // 数组数据
                 templateData.rows = [];
 
-                formGroup.each(function (index, group) {
-                    var row = [];
+                formGroup.each(function () {
+                    var row = {};
 
                     $(this).find('.form-control').each(function () {
-                        var me = $(this), name, label, rule, value;
+                        var me = $(this), name, type, value;
 
                         name = me.attr('name');
-                        label = $.trim(me.prev('.input-group-addon').html());
-                        rule = me.data('rule');
+                        type = me.attr('type') || 'text';
                         value = $.trim(me.val());
+                        value = type == 'number' ? parseInt(value) : value;
 
-                        if (index == 0) {
-                            templateData.fields.push([name, label, rule]);
-                        }
-
-                        row.push(value);
+                        row[name] = value;
                     });
 
                     templateData.rows.push(row);
                 });
-            } else {
-                formGroup.find('.form-control').each(function () {
-                    var me = $(this), name, label, rule, value;
-
-                    name = me.attr('name');
-                    label = $.trim(me.prev('.input-group-addon').html());
-                    rule = me.data('rule');
-                    value = $.trim(me.val());
-
-                    templateData.fields.push([name, label, rule, value]);
-                });
             }
 
-            $('[name="content"]').html(App.compile(template, templateData[isArray ? 'rows' : 'fields']));
+            html = App.compile(template, templateData).replace(/>(\s+)|(\s+)</gim, function (s) {
+                return s.replace(/\s+/, '');
+            });
+
+            $('[name="content"]').html(html);
             $('[name="templateData"]').html(JSON.stringify(templateData));
         }
     },
     buildPage: function () {
-        var form = $('.modal-module .form-module'),
-            formGroup = form.find('.form-group'),
-            template = $.trim($('#tpl-page-module').html()),
-            html = '', module = [];
+        var form = $('.modal-module .form-module'), formGroup = form.find('.form-group'),
+            template = $('#tpl-page-module').html(), html = '', module = [];
 
         if (formGroup.length > 0) {
             formGroup.each(function () {
@@ -94,7 +117,7 @@ var App = {
             });
 
             // keep one line
-            html = App.compile(template, module).replace(/>(\s+)</gim, function (s) {
+            html = App.compile(template, module).replace(/>(\s+)|(\s+)</gim, function (s) {
                 return s.replace(/\s+/, '');
             });
         }
@@ -248,9 +271,7 @@ var App = {
             return false;
         });
 
-        form.submit(function () {
-            return false;
-        }).find('#content').sortable();
+        form.find('#content').sortable();
 
         $('.form-authorize').submit(function () {
             var form = $(this);

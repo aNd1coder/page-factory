@@ -17,10 +17,10 @@ if(controllerName == 'page')
             include ../component/template
 .form-group
     label.control-label 标题
-    input.form-control(type="text",name="title",value=model ? model.title : '',placeholder=controllerName == 'page' ? '显示在网页的标题栏' : '')
+    input.form-control(type="text",name="title",required,value=model ? model.title : '',placeholder=controllerName == 'page' ? '显示在网页的标题栏' : '显示在工具后台')
 .form-group
     label.control-label 文件名
-    input.form-control(type="text",name="filename",readonly=model ? true : false,value=model ? model.filename : '',placeholder="必须为英文或拼音小写，且不能包含空格")
+    input.form-control(type="text",name="filename",required,readonly=model ? true : false,value=model ? model.filename : '',placeholder="必须为英文或拼音小写，且不能包含空格")
 .form-group
     label.control-label 内容
     if(controllerName == 'page' || (controllerName == 'module' && model && model.filetype == 'html'))

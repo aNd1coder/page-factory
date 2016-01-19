@@ -66,6 +66,7 @@ body {
 
 .form-module .input-group-addon {
     padding: 6px 8px;
+    cursor: move;
 }
 
 .navbar-brand {
@@ -275,7 +276,8 @@ input[type=checkbox] {
 
 .modal-dialog .form-group {
     display: block;
-    margin-bottom: 5px;
+    margin: 0 0 5px 0;
+    overflow: hidden;
 }
 
 .modal-dialog .form-module .form-group:first-child .btn-delete {
@@ -283,7 +285,9 @@ input[type=checkbox] {
 }
 
 .modal-dialog .input-group {
-    margin-right: 5px;
+    float: left;
+    padding-right: 5px;
+    box-sizing: border-box;
 }
 
 .modal-dialog .btn {
