@@ -49,7 +49,7 @@
                                                             option(value=key,selected=key == fields[field].value)= text
                                                 else
                                                     .input-group-addon= fields[field].label
-                                                    input.form-control(type=fields[field].type,name=fields[field],value=fields[field].value || '',title=fields[field].label,required=fields[field].required !== false)
+                                                    input.form-control(type=fields[field].type,name=field,value=fields[field].value || '',title=fields[field].label,required=fields[field].required !== false)
                         if(user.isSuperAdmin)
                             #template.tab-pane
                                 textarea.form-control(type="text",name="template")= model ? model.template : ''
