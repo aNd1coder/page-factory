@@ -129,9 +129,11 @@ router.post('/save', function (req, res) {
                     console.log(err);
                 } else {
                     if (published) {
-                        // merge template & page content
+                        // merge template and page content,keep content in one line
                         model.content = template.content.replace(/{{(\w+)}}/gi, function (m, p) {
                             return model[p];
+                        }).replace(/>(\s+)|(\s+)</gim, function (s) {
+                            return s.replace(/\s+/, '');
                         });
 
                         // push to page server

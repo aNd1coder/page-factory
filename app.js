@@ -112,7 +112,8 @@ app.locals.PROJECT = {
 app.locals.FILETYPE = {
     html: 'HTML',
     css: 'CSS',
-    js: 'JS'
+    js: 'JS',
+    other: '其他'
 };
 
 app.locals.MODULETYPE = {

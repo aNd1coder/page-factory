@@ -8,7 +8,7 @@ module.exports = {
         count = Math.ceil(total / limit);
         prev = page <= 1 ? false : page - 1;
         next = page >= count ? false : page + 1;
-        url = url.replace(/&page=\d+/, '').replace(/\?page=\d+/, '');
+        url = url.replace(/[?|&]page=\d+/, '');
         p = (url.indexOf('?') != -1 ? '&' : '?') + 'page=';
         prev = prev ? url + p + prev : false;
         next = next ? url + p + next : false;

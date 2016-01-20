@@ -1,3 +1,4 @@
+- var ENVLABELMAP = {'dev':'default','test':'info','pre':'primary'}
 form.form.form-inline.well(method="get",action="/#{controllerName}/")
     .form-group
         label.control-label 项目
@@ -56,20 +57,8 @@ table.table.table-striped.table-hover
             td= moment(new Date(m.createdAt)).format('YYYY-MM-DD HH:MM:SS')
             td= moment(new Date(m.updatedAt)).format('YYYY-MM-DD HH:MM:SS')
             td
-                if ENVIRONMENT[m.environment]
-                    if m.environment == 'dev'
-                        span.label.label-default= ENVIRONMENT[m.environment]
-                    else if m.environment == 'test'
-                        span.label.label-info= ENVIRONMENT[m.environment]
-                    else if m.environment == 'pre'
-                        span.label.label-primary= ENVIRONMENT[m.environment]
-                    else
-                        span.label.label-success= ENVIRONMENT[m.environment]
-
-                if m.published == 1
-                    span.label.label-success 已发布
-                else
-                    span.label.label-danger 草稿
+                span(class="label label-#{ENVLABELMAP[m.environment] || 'success'}")= ENVIRONMENT[m.environment]
+                span(class="label label-#{m.published == 1 ? 'success' : 'danger'}")= m.published == 1 ? '已发布' : '草稿'
             td
                 if(user.isSuperAdmin)
                     a.btn.btn-default.btn-delete(href="/#{controllerName}/delete/#{m._id}") 删除
