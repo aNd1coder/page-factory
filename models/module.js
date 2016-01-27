@@ -1,4 +1,4 @@
-var mongoagent = require('../config/mongo');
+var mongo = require('../config/mongo');
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
@@ -18,6 +18,6 @@ var moduleSchema = new Schema({
     updatedAt: {type: Date, default: Date.now} // 更新时间
 });
 
-var Module = mongoagent.model('Module', moduleSchema);
+var Module = mongo.model('Module', moduleSchema);
 
 module.exports = Module;

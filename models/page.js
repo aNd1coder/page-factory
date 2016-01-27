@@ -1,4 +1,4 @@
-var mongoagent = require('../config/mongo');
+var mongo = require('../config/mongo');
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
@@ -19,6 +19,6 @@ var pageSchema = new Schema({
     updatedAt: {type: Date, default: Date.now}
 });
 
-var Page = mongoagent.model('Page', pageSchema);
+var Page = mongo.model('Page', pageSchema);
 
 module.exports = Page;

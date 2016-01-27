@@ -43,6 +43,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(function (req, res, next) {
     var url = req.originalUrl, segments = url.split('?')[0].split('/'), user, isSuperAdmin;
 
+    res.locals.query = req.query;
     res.locals.controllerName = segments[1];
     res.locals.actionName = segments[2] || 'index';
 

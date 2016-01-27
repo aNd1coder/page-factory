@@ -270,8 +270,9 @@ input[type=checkbox] {
     padding: 0;
 }
 
-.modal-dialog .well {
-    margin-bottom: 0;
+.modal-dialog .alert {
+    padding: 5px 10px;
+    margin: 5px 0;
 }
 
 .modal-dialog .form-group {

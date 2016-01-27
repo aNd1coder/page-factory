@@ -15,9 +15,11 @@
                                 a(href="#template",data-toggle="tab") 模版
                             li
                                 a(href="#templateData",data-toggle="tab") 数据
-                    .tab-content.well
-                        #content(class="tab-pane active#{model && model.templateData && model.templateData.rows ? ' form-inline' : ''}")
-                            if(model && model.templateData)
+                    .tab-content
+                        if model && model.templateData
+                            #content(class="tab-pane active#{model.templateData.rows ? ' form-inline' : ''}")
+                                if (model.templateData.caption)
+                                    .alert.alert-warning= '【说明】' + model.templateData.caption
                                 - var rows = model.templateData.rows
                                 - var fields = model.templateData.fields
                                 - var fieldCount = Object.keys(fields).length
@@ -50,6 +52,9 @@
                                                 else
                                                     .input-group-addon= fields[field].label
                                                     input.form-control(type=fields[field].type,name=field,value=fields[field].value || '',title=fields[field].label,required=fields[field].required !== false)
+                        else
+                            #content(class="tab-pane active")
+                                .alert.alert-warning 请先定义好「模版」和「数据」
                         if(user.isSuperAdmin)
                             #template.tab-pane
                                 textarea.form-control(type="text",name="template")= model ? model.template : ''
