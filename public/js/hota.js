@@ -379,8 +379,9 @@ $(function () {
             }).end().end()
             .find('.area_info, .v_line, .h_line').remove().end()
             .find('.ui-resizable-handle').remove().end()
-            .find(config.hot_area).css('position', '').removeAttr('class').end()
-            .html();
+            .find(config.hot_area).css('position', '').removeAttr('class').each(function (idx) {
+                $(this).addClass('hota-item hota-item-' + idx);
+            }).end().html();
     }
 
     // 提示
