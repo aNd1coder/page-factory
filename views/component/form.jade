@@ -1,3 +1,4 @@
+- var editable = controllerName == 'page' || (controllerName == 'module' && model && model.filetype == 'html' && model.template);
 - var duplicate = query.action && query.action == 'duplicate';
 .form-group
     label.control-label 项目
@@ -23,7 +24,7 @@ if(controllerName == 'page')
     input.form-control(type="text",name="filename",required,readonly=model && model.filename && !duplicate ? true : false,value=model ? model.filename : '',placeholder="必须为英文或拼音小写，且不能包含空格")
 .form-group
     label.control-label 内容
-    if(controllerName == 'page' || (controllerName == 'module' && model && model.filetype == 'html'))
+    if(editable)
         .html-editor
             textarea.form-control(type="text",name="content")= model ? model.content : ''
     else
