@@ -55,11 +55,10 @@
                         else
                             #content(class="tab-pane active")
                                 .alert.alert-warning 请先定义好「模版」和「数据」
-                        if(user.isSuperAdmin)
-                            #template.tab-pane
-                                textarea.form-control(type="text",name="template")= model ? model.template : ''
-                            #templateData.tab-pane
-                                textarea.form-control(type="text",name="templateData")= model ? JSON.stringify(model.templateData) : ''
+                        #template.tab-pane
+                            textarea.form-control(type="text",name="template")= model ? model.template : ''
+                        #templateData.tab-pane
+                            textarea.form-control(type="text",name="templateData")= model ? JSON.stringify(model.templateData) : ''
             .modal-footer
                 a.btn.btn-default(href="javascript:;",data-dismiss="modal") 关闭
                 a.btn.btn-primary.btn-save(href="javascript:;",type="submit") 保存

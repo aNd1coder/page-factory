@@ -44,27 +44,28 @@ table.table.table-striped.table-hover
             th 操作
     tbody
     each m in model.data
-        tr
-            td
-                - var title = '【' + (PROJECT[m.project] || '全局') + (m.filetype ? FILETYPE[m.filetype] : '') + '】' + (m.title||'');
-                if(m.path)
-                    - var url = 'http://' + (m.project == 'global' ? 'www' : m.project) + '.' + setting.domain + (controllerName == 'page' ? '' : '/ssi') + '/' + m.path;
-                    a(href="#{url}",target="_blank")= title
-                else
-                    span= title
-                if(controllerName == 'module')
-                    code.btn-copy(href="javascript:;",title=m.path) 复制代码
-            td= m.filename
-            td
-                a(href="/#{controllerName}/?author=#{m.author}")= m.author
-            td= moment(new Date(m.createdAt)).format('YYYY-MM-DD HH:MM:SS')
-            td= moment(new Date(m.updatedAt)).format('YYYY-MM-DD HH:MM:SS')
-            td
-                span(class="label label-#{ENVLABELMAP[m.environment] || 'success'}")= ENVIRONMENT[m.environment]
-                span(class="label label-#{m.published == 1 ? 'success' : 'danger'}")= m.published == 1 ? '已发布' : '草稿'
-            td
-                if(user.isSuperAdmin)
-                    a.btn.btn-default.btn-delete(href="/#{controllerName}/delete/#{m._id}") 删除
+        if(user.isSuperAdmin || (!user.isSuperAdmin && m.template))
+            tr
+                td
+                    - var title = '【' + (PROJECT[m.project] || '全局') + (m.filetype ? FILETYPE[m.filetype] : '') + '】' + (m.title||'');
+                    if(m.path)
+                        - var url = 'http://' + (m.project == 'global' ? 'www' : m.project) + '.' + setting.domain + (controllerName == 'page' ? '' : '/ssi') + '/' + m.path;
+                        a(href="#{url}",target="_blank")= title
+                    else
+                        span= title
+                    if(controllerName == 'module')
+                        code.btn-copy(href="javascript:;",title=m.path) 复制代码
+                td= m.filename
+                td
+                    a(href="/#{controllerName}/?author=#{m.author}")= m.author
+                td= moment(new Date(m.createdAt)).format('YYYY-MM-DD HH:MM:SS')
+                td= moment(new Date(m.updatedAt)).format('YYYY-MM-DD HH:MM:SS')
+                td
+                    span(class="label label-#{ENVLABELMAP[m.environment] || 'success'}")= ENVIRONMENT[m.environment]
+                    span(class="label label-#{m.published == 1 ? 'success' : 'danger'}")= m.published == 1 ? '已发布' : '草稿'
+                td
+                    if(user.isSuperAdmin)
+                        a.btn.btn-default.btn-delete(href="/#{controllerName}/delete/#{m._id}") 删除
                     a.btn.btn-info(href="/#{controllerName}/edit/#{m._id}?action=duplicate") 复制
-                a.btn.btn-primary(href="/#{controllerName}/edit/#{m._id}") 编辑
+                    a.btn.btn-primary(href="/#{controllerName}/edit/#{m._id}") 编辑
 include ../component/pagination
