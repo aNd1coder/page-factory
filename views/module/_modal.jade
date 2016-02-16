@@ -28,30 +28,32 @@
                                     each row in rows
                                         .form-group
                                             each index,field in row
-                                                .input-group(style="width:#{width}%")
-                                                    - var option = fields[field].option
-                                                    if(option && Object.keys(option).length > 0)
-                                                        select.form-control(name=field,title=fields[field].label,required=fields[field].required !== false)
-                                                            each text,key in option
-                                                                option(value=key,selected=key == row[field])= text
-                                                    else
-                                                        .input-group-addon= fields[field].label
-                                                        input.form-control(type=fields[field].type || 'text',name=field,value=row[field],title=fields[field].label,required=fields[field].required !== false)
+                                                if(fields[field])
+                                                    .input-group(style="width:#{width}%")
+                                                        - var option = fields[field].option
+                                                        if(option && Object.keys(option).length > 0)
+                                                            select.form-control(name=field,title=fields[field].label,required=fields[field].required !== false)
+                                                                each text,key in option
+                                                                    option(value=key,selected=key == row[field])= text
+                                                        else
+                                                            .input-group-addon= fields[field].label
+                                                            input.form-control(type=fields[field].type || 'text',name=field,value=row[field],title=fields[field].label,required=fields[field].required !== false)
                                             .input-group(style="width:#{width}%")
                                                 a.btn.btn-primary.btn-new(href="javascript:;") 新增
                                                 a.btn.btn-default.btn-delete(href="javascript:;") 删除
                                 else if(fields)
                                     each index,field in fields
-                                        .form-group
-                                            .input-group
-                                                - var option = fields[field].option
-                                                if(option && Object.keys(option).length > 0)
-                                                    select.form-control(name=field,title=fields[field].label,required=fields[field].required !== false)
-                                                        each text,key in option
-                                                            option(value=key,selected=key == fields[field].value)= text
-                                                else
-                                                    .input-group-addon= fields[field].label
-                                                    input.form-control(type=fields[field].type,name=field,value=fields[field].value || '',title=fields[field].label,required=fields[field].required !== false)
+                                        if(fields[field])
+                                            .form-group
+                                                .input-group
+                                                    - var option = fields[field].option
+                                                    if(option && Object.keys(option).length > 0)
+                                                        select.form-control(name=field,title=fields[field].label,required=fields[field].required !== false)
+                                                            each text,key in option
+                                                                option(value=key,selected=key == fields[field].value)= text
+                                                    else
+                                                        .input-group-addon= fields[field].label
+                                                        input.form-control(type=fields[field].type,name=field,value=fields[field].value || '',title=fields[field].label,required=fields[field].required !== false)
                         else
                             #content(class="tab-pane active")
                                 .alert.alert-warning 请先定义好「模版」和「数据」
