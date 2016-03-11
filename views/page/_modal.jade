@@ -33,28 +33,32 @@ script#tpl-page-module(type="text/html").
         var background = (module[4] ? 'background-color:' + module[4] : '') + (module[5] ? 'background-image:url(' + module[5] + ')' : '');
         var style = background ? ' style="' + background + '"' : '';
 
-    if(content){ %>
-        <a name="<%= index %>" title="<%= module[0] %>"></a>
-        <% if (type == 'bundle') { %>
-        <div id="<%= index %>" class="<%= klass %> module-theme-<%= module[3] || 1 %>" data-id="<%= content %>"<%= style %>>
-            <i class="loading"></i>
-        </div>
-        <% }
+        if(content){ %>
+            <a name="<%= index %>" title="<%= module[0] %>"></a>
+            <% if (type == 'bundle') { %>
+            <div id="<%= index %>" class="<%= klass %> module-theme-<%= module[3] || 1 %>" data-id="<%= content %>"<%= style %>>
+                <i class="loading"></i>
+            </div>
+            <% }
 
-        if (type == 'slider') { %>
-        <div id="<%= index %>" class="<%= klass %>" data-id="<%= content %>"<%= style %>>
-            <i class="loading"></i>
-        </div>
-        <% }
+            if (type == 'hota') { %>
+            <div id="<%= index %>" class="<%= klass %>"<%= style %>>
+                <div class="container"><%= content.replace('class="hota-imgholder" src','class="hota-imgholder" src="#{setting.imgholder}" data-src') %></div>
+            </div>
+            <% }
 
-        if (type == 'hota') { %>
-        <div id="<%= index %>" class="<%= klass %>"<%= style %>>
-            <div class="container"><%= content.replace('class="hota-imgholder" src','class="hota-imgholder" src="#{setting.imgholder}" data-src') %></div>
-        </div>
-        <% }
+            if (type == 'banner') { %>
+            <div id="<%= index %>" class="<%= klass %>" data-src="<%= content %>"></div>
+            <% }
 
-        if (type == 'banner') { %>
-        <div id="<%= index %>" class="<%= klass %>" data-src="<%= content %>"></div>
-        <% }
+            if (type == 'text') { %>
+            <div id="<%= index %>" class="<%= klass %>"><div class="container"><%= content %></div></div>
+            <% }
+
+            if (type == 'slider') { %>
+            <div id="<%= index %>" class="<%= klass %>" data-id="<%= content %>"<%= style %>>
+                <i class="loading"></i>
+            </div>
+            <% }
         }
     }%>

@@ -120,6 +120,7 @@ app.locals.MODULETYPE = {
     bundle: '商品包',
     hota: '热点图',
     banner: '通栏图',
+    text: '文字块',
     slider: '轮播图'
 };
 
