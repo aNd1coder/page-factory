@@ -18,7 +18,7 @@
                         #content(class="tab-pane active form-inline")
                             include ../component/module
                         #style.tab-pane
-                            textarea.form-control(type="text",name="style")= model && model.style ? model.style : '<style>body{background-color: #fff;}</style>'
+                            textarea.form-control(type="text",name="style")= model && model.style ? model.style : '<style>body{background-color: #fff;/*网页背景色*/}.module-text{color: #fff;/*文本块字体颜色*/}</style>'
                         #script.tab-pane
                             textarea.form-control(type="text",name="script")= model ? model.script : ''
             .modal-footer
