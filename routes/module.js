@@ -76,11 +76,11 @@ router.post('/save', function (req, res) {
     model.title = (model.title || '').trim();
     model.content = (model.content || '').trim();
 
-    if (model.filetype == 'html') {
+    /*if (model.filetype == 'html') {
         model.content = model.content.replace(/>(\s+)|(\s+)</gim, function (s) {
             return s.replace(/\s+/, '');
         });
-    }
+    }*/
 
     model.template = (model.template || '').trim();
     model.templateData = (model.templateData || '').trim();
