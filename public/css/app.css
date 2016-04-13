@@ -278,7 +278,23 @@ input[type=checkbox] {
 .modal-dialog .form-group {
     display: block;
     margin: 0 0 5px 0;
-    overflow: hidden;
+}
+
+.modal-dialog .form-group:after {
+    display: block;
+    height: 0;
+    content: '';
+    visibility: hidden;
+    clear: both;
+}
+
+.form-control[type="file"][data-url]:after {
+    position: absolute;
+    left: 90%;
+    content: '●';
+    margin-top: -2px;
+    font-size: 16px;
+    color: #5cb85c;
 }
 
 .modal-dialog .form-module .form-group:first-child .btn-delete {

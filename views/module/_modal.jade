@@ -37,7 +37,7 @@
                                                                     option(value=key,selected=key == row[field])= text
                                                         else
                                                             .input-group-addon= fields[field].label
-                                                            input.form-control(type=fields[field].type || 'text',name=field,value=row[field],title=fields[field].label,required=fields[field].required !== false)
+                                                            input.form-control(type=fields[field].type || 'text',name=field,value=row[field],data-url=fields[field].type == 'file' ? value = row[field] : null,title=fields[field].label,required=fields[field].required !== false)
                                             .input-group(style="width:#{width}%")
                                                 a.btn.btn-primary.btn-new(href="javascript:;") 新增
                                                 a.btn.btn-default.btn-delete(href="javascript:;") 删除

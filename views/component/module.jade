@@ -20,7 +20,7 @@ each m in modules
             input.form-control(type="text",value=m[4])
         .input-group
             .input-group-addon 背景图
-            input.form-control(type="text",value=m[5])
+            input.form-control(type="file",data-url=m[5] || null)
         .input-group
             a.btn.btn-primary.btn-new(href="javascript:;") 新增
             a.btn.btn-default.btn-delete(href="javascript:;") 删除

@@ -52,6 +52,10 @@ var App = {
                     });
                 }
 
+                if (type == 'file') {
+                    value = me.attr('data-url');
+                }
+
                 templateData.fields[name] = {label: label};
 
                 if (!isArray) {
@@ -85,6 +89,10 @@ var App = {
                         value = $.trim(me.val());
                         value = type == 'number' ? parseInt(value) : value;
 
+                        if (type == 'file') {
+                            value = me.attr('data-url');
+                        }
+
                         row[name] = value;
                     });
 
@@ -109,7 +117,12 @@ var App = {
                 var row = [];
 
                 $(this).find('.form-control').each(function () {
-                    var me = $(this), value = $.trim(me.val());
+                    var me = $(this), type = me.attr('type'), value = $.trim(me.val());
+
+                    if (type == 'file') {
+                        value = me.attr('data-url');
+                    }
+
                     row.push(value);
                 });
 
@@ -138,7 +151,7 @@ var App = {
 
         window.localStorage.setItem(App.UPLOADED_FILES_CHACHE_KEY, JSON.stringify(App.uploadedFiles));
     },
-    imageUploader: function (blob) {
+    imageUploader: function (blob, callback) {
         var reader = new FileReader();
 
         App.alert('图片上传中，请稍等...', 1000000000);
@@ -156,7 +169,7 @@ var App = {
                     App.alert(message);
 
                     if (code == 0) {
-                        App.storeUploadedFiles(result.data.url);
+                        callback && callback(result.data.url);
                     }
                 }
             });
@@ -273,6 +286,30 @@ var App = {
 
         form.find('#content').sortable();
 
+        form.find('.form-control[type="file"]').change(function () {
+            var me = $(this), file = this.files[0], type = file.type;
+
+            if (type.indexOf('image') == -1) {
+                App.alert('只支持上传图片!');
+                return false;
+            }
+
+            App.imageUploader(file, function (url) {
+                me.attr('data-url', url);
+            });
+        }).popover({
+            html: true,
+            placement: 'right',
+            trigger: 'hover',
+            content: '<img width="150" height="150" src="https://placeholdit.imgix.net/~text?txtsize=20&txt=无图片&w=150&h=150" />'
+        }).on('shown.bs.popover', function () {
+            var me = $(this), src = me.attr('data-url');
+
+            if (src) {
+                $('.popover-content').find('img').attr({src: src});
+            }
+        });
+
         $('.form-authorize').submit(function () {
             var form = $(this);
 
@@ -338,7 +375,7 @@ var App = {
             });
 
             $('.form-uploader').on('paste', function (event) {
-                var clipboardData = event.clipboardData, i = 0, items, item, types;
+                var clipboardData = event.clipboardData, i = 0, items, item, file, types;
 
                 if (clipboardData) {
                     items = clipboardData.items;
@@ -354,7 +391,10 @@ var App = {
                         }
 
                         if (item && item.kind == 'file' && item.type.match(/^image\//i)) {
-                            App.imageUploader(item.getAsFile());
+                            file = item.getAsFile();
+                            App.imageUploader(file, function (url) {
+                                App.storeUploadedFiles(url);
+                            });
                         }
                     }
                 }
@@ -382,7 +422,9 @@ var App = {
                         return false;
                     }
 
-                    App.imageUploader(file);
+                    App.imageUploader(file, function (url) {
+                        App.storeUploadedFiles(url);
+                    });
                 }
             });
         }
