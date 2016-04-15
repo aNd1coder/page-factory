@@ -353,7 +353,21 @@ var App = {
                 html = App.compile(tpl, App.uploadedFiles);
                 $('.list-files .list-group-item:first').after(html);
 
-                $('[data-toggle="popover"]').popover({html: true, placement: 'top', trigger: 'hover'});
+                $('[data-toggle="popover"]').popover({
+                    html: true,
+                    placement: 'top',
+                    trigger: 'hover'
+                }).on('shown.bs.popover', function () {
+                    var src = $(this).attr('href'), img = new Image(), w, h;
+
+                    img.onload = function () {
+                        w = this.width;
+                        h = this.height;
+                        $('.popover-title').html('图片尺寸：' + w + 'x' + h);
+                    }
+
+                    img.src = src;
+                });
             }
 
             $('#btn-upload').uploadify({
