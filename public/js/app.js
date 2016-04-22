@@ -261,7 +261,7 @@ var App = {
         modal.on('click', '.btn-new', function () {
             var el = $(this).parents('.form-group'), clone = el.clone();
             el.after(clone);
-            clone.find('input.form-control').val('');
+            clone.find('input.form-control').val('').removeAttr('data-url');
         }).on('click', '.btn-delete', function () {
             var row = $(this).parents('.form-group'), d = dialog({
                 title: '提示',
@@ -286,7 +286,7 @@ var App = {
 
         form.find('#content').sortable();
 
-        form.find('.form-control[type="file"]').change(function () {
+        form.on('change', '.form-control[type="file"]', function () {
             var me = $(this), file = this.files[0], type = file.type;
 
             if (type.indexOf('image') == -1) {
@@ -295,9 +295,22 @@ var App = {
             }
 
             App.imageUploader(file, function (url) {
-                me.attr('data-url', url);
+                me.attr('data-url', url).popover({
+                    html: true,
+                    placement: 'right',
+                    trigger: 'hover',
+                    content: '<img width="150" height="150" src="https://placeholdit.imgix.net/~text?txtsize=20&txt=无图片&w=150&h=150" />'
+                }).on('shown.bs.popover', function () {
+                    var me = $(this), src = me.attr('data-url');
+
+                    if (src) {
+                        $('.popover-content').find('img').attr({src: src});
+                    }
+                });
             });
-        }).popover({
+        });
+
+        $('.form-control[type="file"]', form).popover({
             html: true,
             placement: 'right',
             trigger: 'hover',
